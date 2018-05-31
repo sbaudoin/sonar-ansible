@@ -1,0 +1,14 @@
+{
+  "title": "action sudo is deprecated",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "2min"
+  },
+  "tags": [
+    "deprecated"
+  ],
+  "defaultSeverity": "Major",
+  "sqKey": "ANSIBLE0008"
+}

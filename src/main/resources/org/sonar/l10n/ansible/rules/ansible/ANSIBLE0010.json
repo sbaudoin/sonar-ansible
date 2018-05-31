@@ -1,0 +1,15 @@
+{
+  "title": "Package installs should not use latest",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "2min"
+  },
+  "tags": [
+    "repeatability",
+    "idempotency"
+  ],
+  "defaultSeverity": "Critical",
+  "sqKey": "ANSIBLE0010"
+}

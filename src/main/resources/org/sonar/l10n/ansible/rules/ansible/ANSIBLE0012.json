@@ -1,0 +1,14 @@
+{
+  "title": "Commands should not change things if nothing needs doing",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "2min"
+  },
+  "tags": [
+    "idempotency"
+  ],
+  "defaultSeverity": "Major",
+  "sqKey": "ANSIBLE0012"
+}

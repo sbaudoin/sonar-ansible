@@ -1,0 +1,15 @@
+{
+  "title": "Octal file permissions must contain leading zero",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "2min"
+  },
+  "tags": [
+    "formatting",
+    "convention"
+  ],
+  "defaultSeverity": "Major",
+  "sqKey": "ANSIBLE0009"
+}

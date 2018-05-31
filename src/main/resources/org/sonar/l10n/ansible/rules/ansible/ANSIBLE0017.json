@@ -1,0 +1,14 @@
+{
+  "title": "become_user requires become to work as expected",
+  "type": "BUG",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "2min"
+  },
+  "tags": [
+    "oddity"
+  ],
+  "defaultSeverity": "Major",
+  "sqKey": "ANSIBLE0017"
+}
