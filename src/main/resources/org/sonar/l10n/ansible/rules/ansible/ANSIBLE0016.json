@@ -7,6 +7,7 @@
     "constantCost": "30min"
   },
   "tags": [
+    "ansible",
     "behaviour"
   ],
   "defaultSeverity": "Major",
