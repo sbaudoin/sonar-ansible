@@ -5,7 +5,7 @@ import org.sonar.api.rule.RuleKey;
 
 public class CheckRepositoryTest extends TestCase {
     public void testGetCheckClasses() {
-        assertEquals(15, CheckRepository.getCheckClasses().size());
+        assertEquals(16, CheckRepository.getCheckClasses().size());
         assertTrue(CheckRepository.getCheckClasses().contains(AlwaysRuleCheck.class));
     }
 

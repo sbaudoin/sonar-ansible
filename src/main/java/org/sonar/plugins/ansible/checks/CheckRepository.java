@@ -23,6 +23,7 @@ public class CheckRepository {
             PackageIsNotLatestCheck.class,
             SudoCheck.class,
             TaskHasNameCheck.class,
+            TrailingWhitespaceCheck.class,
             UseCommandInsteadOfShellCheck.class,
             UseHandlerRatherThanWhenChangedCheck.class,
             UsingBareVariablesIsDeprecatedCheck.class

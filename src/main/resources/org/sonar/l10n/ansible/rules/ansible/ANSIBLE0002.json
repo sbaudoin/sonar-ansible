@@ -1,0 +1,15 @@
+{
+  "title": "Trailing whitespace",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "2min"
+  },
+  "tags": [
+    "formatting",
+    "convention"
+  ],
+  "defaultSeverity": "Minor",
+  "sqKey": "ANSIBLE0002"
+}
