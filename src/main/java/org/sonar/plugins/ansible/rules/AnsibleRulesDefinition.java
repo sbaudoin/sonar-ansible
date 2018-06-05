@@ -20,13 +20,6 @@ public class AnsibleRulesDefinition implements RulesDefinition {
         List<Class> allCheckClasses = new ArrayList<>(CheckRepository.getCheckClasses());
         metadataLoader.addRulesByAnnotatedClass(repository, allCheckClasses);
 
-        // Declare rule templates
-        for(RulesDefinition.NewRule rule : repository.rules()) {
-            if (CheckRepository.getTemplateRuleKeys().contains(rule.key())) {
-                rule.setTemplate(true);
-            }
-        }
-
         repository.done();
     }
 }

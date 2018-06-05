@@ -9,10 +9,6 @@ public class CheckRepositoryTest extends TestCase {
         assertTrue(CheckRepository.getCheckClasses().contains(AlwaysRuleCheck.class));
     }
 
-    public void testGetTemplateRuleKeys() {
-        assertTrue(CheckRepository.getTemplateRuleKeys().isEmpty());
-    }
-
     public void testGetRuleKey() {
         assertEquals(RuleKey.of(CheckRepository.REPOSITORY_KEY, "foo"), CheckRepository.getRuleKey("foo"));
     }

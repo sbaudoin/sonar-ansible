@@ -29,9 +29,6 @@ public class CheckRepository {
             UsingBareVariablesIsDeprecatedCheck.class
     );
 
-    private static final List<String> TEMPLATE_RULE_KEYS = Arrays.asList(
-    );
-
 
     /**
      * Hide constructor
@@ -47,15 +44,6 @@ public class CheckRepository {
      */
     public static List<Class> getCheckClasses() {
         return CHECK_CLASSES;
-    }
-
-    /**
-     * Returns the keys of the rules that are parameterized, i.e. that are templates
-     *
-     * @return the keys of the rules that are parameterized, i.e. that are templates
-     */
-    public static List<String> getTemplateRuleKeys() {
-        return TEMPLATE_RULE_KEYS;
     }
 
     /**
