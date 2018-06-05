@@ -10,6 +10,5 @@
     "ansible",
     "oddity"
   ],
-  "defaultSeverity": "Major",
-  "sqKey": "ANSIBLE0017"
+  "defaultSeverity": "Major"
 }

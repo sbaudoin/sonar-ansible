@@ -11,6 +11,5 @@
     "formatting",
     "deprecated"
   ],
-  "defaultSeverity": "Major",
-  "sqKey": "ANSIBLE0015"
+  "defaultSeverity": "Major"
 }

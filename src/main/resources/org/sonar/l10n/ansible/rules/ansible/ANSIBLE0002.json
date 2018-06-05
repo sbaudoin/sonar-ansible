@@ -11,6 +11,5 @@
     "formatting",
     "convention"
   ],
-  "defaultSeverity": "Minor",
-  "sqKey": "ANSIBLE0002"
+  "defaultSeverity": "Minor"
 }

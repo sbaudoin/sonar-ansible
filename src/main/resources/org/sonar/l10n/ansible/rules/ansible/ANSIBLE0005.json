@@ -11,6 +11,5 @@
     "repeatability",
     "idempotency"
   ],
-  "defaultSeverity": "Critical",
-  "sqKey": "ANSIBLE0005"
+  "defaultSeverity": "Critical"
 }

@@ -10,6 +10,5 @@
     "ansible",
     "safety"
   ],
-  "defaultSeverity": "Major",
-  "sqKey": "ANSIBLE0013"
+  "defaultSeverity": "Major"
 }

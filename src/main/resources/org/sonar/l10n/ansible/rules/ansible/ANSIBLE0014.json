@@ -10,6 +10,5 @@
     "ansible",
     "bug"
   ],
-  "defaultSeverity": "Critical",
-  "sqKey": "ANSIBLE0014"
+  "defaultSeverity": "Critical"
 }

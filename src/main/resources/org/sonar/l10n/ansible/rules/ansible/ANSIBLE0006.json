@@ -10,6 +10,5 @@
     "ansible",
     "resources"
   ],
-  "defaultSeverity": "Major",
-  "sqKey": "ANSIBLE0006"
+  "defaultSeverity": "Major"
 }

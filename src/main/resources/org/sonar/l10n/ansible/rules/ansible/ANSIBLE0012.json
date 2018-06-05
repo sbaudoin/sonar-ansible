@@ -10,6 +10,5 @@
     "ansible",
     "idempotency"
   ],
-  "defaultSeverity": "Major",
-  "sqKey": "ANSIBLE0012"
+  "defaultSeverity": "Major"
 }
