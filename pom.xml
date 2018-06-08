@@ -154,65 +154,57 @@
         <profile>
             <id>audit</id>
             <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.jacoco</groupId>
-                            <artifactId>jacoco-maven-plugin</artifactId>
-                            <version>0.8.1</version>
-                            <configuration>
-                                <append>true</append>
-                                <rules>
-                                    <rule implementation="org.jacoco.maven.RuleConfiguration">
-                                        <element>BUNDLE</element>
-                                        <limits>
-                                            <limit implementation="org.jacoco.report.check.Limit">
-                                                <counter>BRANCH</counter>
-                                                <value>COVEREDRATIO</value>
-                                                <minimum>0.80</minimum>
-                                            </limit>
-                                            <limit implementation="org.jacoco.report.check.Limit">
-                                                <counter>INSTRUCTION</counter>
-                                                <value>COVEREDRATIO</value>
-                                                <minimum>0.95</minimum>
-                                            </limit>
-                                            <limit implementation="org.jacoco.report.check.Limit">
-                                                <counter>CLASS</counter>
-                                                <value>MISSEDCOUNT</value>
-                                                <maximum>0</maximum>
-                                            </limit>
-                                        </limits>
-                                    </rule>
-                                </rules>
-                            </configuration>
-                            <executions>
-                                <execution>
-                                    <id>agent-for-ut</id>
-                                    <goals>
-                                        <goal>prepare-agent</goal>
-                                    </goals>
-                                </execution>
-                                <execution>
-                                    <id>jacoco-check</id>
-                                    <goals>
-                                        <goal>check</goal>
-                                    </goals>
-                                </execution>
-                                <execution>
-                                    <id>jacoco-site</id>
-                                    <goals>
-                                        <goal>report</goal>
-                                    </goals>
-                                </execution>
-                            </executions>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.codehaus.mojo</groupId>
-                            <artifactId>findbugs-maven-plugin</artifactId>
-                            <version>3.0.4</version>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>0.8.1</version>
+                        <configuration>
+                            <append>true</append>
+                            <rules>
+                                <rule implementation="org.jacoco.maven.RuleConfiguration">
+                                    <element>BUNDLE</element>
+                                    <limits>
+                                        <limit implementation="org.jacoco.report.check.Limit">
+                                            <counter>BRANCH</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.80</minimum>
+                                        </limit>
+                                        <limit implementation="org.jacoco.report.check.Limit">
+                                            <counter>INSTRUCTION</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.95</minimum>
+                                        </limit>
+                                        <limit implementation="org.jacoco.report.check.Limit">
+                                            <counter>CLASS</counter>
+                                            <value>MISSEDCOUNT</value>
+                                            <maximum>0</maximum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>agent-for-ut</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>jacoco-site</id>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                        <version>3.0.4</version>
+                    </plugin>
+                </plugins>
             </build>
             <reporting>
                 <plugins>
