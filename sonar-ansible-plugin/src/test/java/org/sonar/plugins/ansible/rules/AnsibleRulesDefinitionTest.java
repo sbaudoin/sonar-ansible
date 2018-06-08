@@ -18,7 +18,6 @@ package org.sonar.plugins.ansible.rules;
 import junit.framework.TestCase;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.plugins.ansible.checks.AnsibleCheckRepository;
-import org.sonar.plugins.ansible.checks.CheckRepository;
 import org.sonar.plugins.yaml.languages.YamlLanguage;
 
 public class AnsibleRulesDefinitionTest extends TestCase {

@@ -16,12 +16,8 @@
 package org.sonar.plugins.ansible.rules;
 
 import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.measures.FileLinesContextFactory;
-import org.sonar.plugins.ansible.checks.AnsibleCheckRepository;
-import org.sonar.plugins.ansible.checks.CheckRepository;
 import org.sonar.plugins.yaml.languages.YamlLanguage;
 
 public class AnsibleSensor extends AbstractAnsibleSensor {
@@ -29,13 +25,9 @@ public class AnsibleSensor extends AbstractAnsibleSensor {
      * Constructor
      *
      * @param fileSystem the file system on which the sensor will find the files to be analyzed
-     * @param checkFactory check factory used to get the checks to execute against the files
-     * @param fileLinesContextFactory factory used to report measures
      */
-    public AnsibleSensor(FileSystem fileSystem, CheckFactory checkFactory/*, FileLinesContextFactory fileLinesContextFactory*/) {
-        super(fileSystem/*,
-                checkFactory.create(AnsibleCheckRepository.REPOSITORY_KEY).addAnnotatedChecks((Iterable<?>) CheckRepository.getCheckClasses()),
-                fileLinesContextFactory*/);
+    public AnsibleSensor(FileSystem fileSystem) {
+        super(fileSystem);
     }
 
 
