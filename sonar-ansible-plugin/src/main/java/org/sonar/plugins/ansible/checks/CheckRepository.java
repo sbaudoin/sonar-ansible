@@ -15,15 +15,13 @@
  */
 package org.sonar.plugins.ansible.checks;
 
-import org.sonar.api.rule.RuleKey;
-
 import java.util.Arrays;
 import java.util.List;
 
 public class CheckRepository {
     private static final List<Class> CHECK_CLASSES = Arrays.asList(
             // Only checks that do not duplicate existing YAML lint rules
-            AlwaysRuleCheck.class,
+            AlwaysRunCheck.class,
             BecomeUserWithoutBecomeCheck.class,
             CommandHasChangesCheckCheck.class,
             CommandsInsteadOfArgumentsCheck.class,
