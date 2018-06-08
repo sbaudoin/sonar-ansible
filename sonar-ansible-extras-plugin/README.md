@@ -112,7 +112,8 @@ On SonarQube, you must have the [YAML SonarQube plugin](https://github.com/sbaud
 ### Extension process
 Basically, you start the previous prcess at step 4:
 
-1. Open the file `sonar-ansible-extras-plugin-<version>.jar` with a ZIP tool
-2. Put your Python rule in the directory `extra-rules` and descriptor files in the directory `org/sonar/l10n/ansible/rules/ansible-extras` of the JAR file
-3. Save the JAR archive
-4. Deploy the JAR in SonarQube (directory `extensions/plugins`) and restart
+1. Download [the extra plugin JAR file](https://github.com/sbaudoin/sonar-ansible/releases)
+2. Open the file `sonar-ansible-extras-plugin-<version>.jar` with a ZIP tool
+3. Put your Python rule in the directory `extra-rules` and descriptor files in the directory `org/sonar/l10n/ansible/rules/ansible-extras` of the JAR file
+4. Save the JAR archive
+5. Deploy the JAR in SonarQube (directory `extensions/plugins`) and restart
