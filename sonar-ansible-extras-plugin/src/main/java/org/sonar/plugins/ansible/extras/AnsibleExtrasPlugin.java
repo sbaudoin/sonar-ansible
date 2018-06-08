@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sonar.plugins.ansible.settings;
+package org.sonar.plugins.ansible.extras;
 
-import junit.framework.TestCase;
-import org.sonar.api.config.PropertyDefinition;
-
-import java.util.List;
-
-public class AnsibleSettingsTest extends TestCase {
-    public void testGetProperties() {
-        List<PropertyDefinition> defs = AnsibleSettings.getProperties();
-
-        assertEquals(1, defs.size());
-        assertEquals(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, defs.get(0).key());
-        assertEquals(AnsibleSettings.ANSIBLE_LINT_PATH_DEFAULT_VALUE, defs.get(0).defaultValue());
-    }
+/**
+ * Plugin class for Ansible Lint extensions. Create your own class by just extending the {@code AbstractAnsibleExtrasPlugin}
+ * class. No additional code is required:
+ *
+ * <pre>
+ *     public class MyOwnPlugin extends AbstractAnsibleExtrasPlugin {
+ *     }
+ * </pre>
+ *
+ * @see AbstractAnsibleExtrasPlugin
+ */
+public class AnsibleExtrasPlugin extends AbstractAnsibleExtrasPlugin {
 }

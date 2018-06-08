@@ -28,13 +28,15 @@
     </developers>
     
     <modules>
+        <module>sonar-ansible-api</module>
         <module>sonar-ansible-plugin</module>
+        <module>sonar-ansible-extras-plugin</module>
     </modules>
     
     <scm>
         <connection>scm:git:https://github.com/sbaudoin/sonar-ansible.git</connection>
         <developerConnection>scm:git:ssh://github.com/sbaudoin/sonar-ansible.git</developerConnection>
-        <url>https://github.com/SonarSource/sonar-ansible</url>
+        <url>https://github.com/sbaudoin/sonar-ansible</url>
         <tag>HEAD</tag>
     </scm>
     <issueManagement>

@@ -17,6 +17,7 @@ package org.sonar.plugins.ansible.rules;
 
 import junit.framework.TestCase;
 import org.sonar.api.server.rule.RulesDefinition;
+import org.sonar.plugins.ansible.checks.AnsibleCheckRepository;
 import org.sonar.plugins.ansible.checks.CheckRepository;
 import org.sonar.plugins.yaml.languages.YamlLanguage;
 
@@ -25,11 +26,11 @@ public class AnsibleRulesDefinitionTest extends TestCase {
         AnsibleRulesDefinition rulesDefinition = new AnsibleRulesDefinition();
         RulesDefinition.Context context = new RulesDefinition.Context();
         rulesDefinition.define(context);
-        RulesDefinition.Repository repository = context.repository(CheckRepository.REPOSITORY_KEY);
+        RulesDefinition.Repository repository = context.repository(AnsibleCheckRepository.REPOSITORY_KEY);
 
-        assertEquals(CheckRepository.REPOSITORY_NAME, repository.name());
+        assertEquals(AnsibleCheckRepository.REPOSITORY_NAME, repository.name());
         assertEquals(YamlLanguage.KEY, repository.language());
-        assertEquals(CheckRepository.getCheckClasses().size(), repository.rules().size());
+        assertEquals(16, repository.rules().size());
 
         RulesDefinition.Rule aRule = repository.rule("ANSIBLE0004");
         assertNotNull(aRule);

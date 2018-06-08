@@ -23,8 +23,4 @@ public class CheckRepositoryTest extends TestCase {
         assertEquals(16, CheckRepository.getCheckClasses().size());
         assertTrue(CheckRepository.getCheckClasses().contains(AlwaysRuleCheck.class));
     }
-
-    public void testGetRuleKey() {
-        assertEquals(RuleKey.of(CheckRepository.REPOSITORY_KEY, "foo"), CheckRepository.getRuleKey("foo"));
-    }
 }
