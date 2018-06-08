@@ -42,14 +42,14 @@ public abstract class AbstractAnsibleRulesDefinition implements RulesDefinition 
         RuleMetadataLoader metadataLoader = new RuleMetadataLoader(getRuleDefinitionPath());
 
         List<String> keys = new ArrayList<>();
-        getRuleKeys().forEach(key -> keys.add(key));
+        getRuleKeys().forEach(keys::add);
         metadataLoader.addRulesByRuleKey(repository, keys);
 
         repository.done();
     }
 
 
-    abstract protected String getRuleDefinitionPath();
+    protected abstract String getRuleDefinitionPath();
 
 
     private List<String> getRuleKeys() {

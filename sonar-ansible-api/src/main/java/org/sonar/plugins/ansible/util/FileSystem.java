@@ -26,13 +26,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public final class FileSystem implements Closeable {
     private static final Logger LOGGER = Loggers.get(FileSystem.class);
 
     private boolean defaultFileSystem = false;
-    private java.nio.file.FileSystem fileSystem;
+    private java.nio.file.FileSystem fs;
 
 
     /**
@@ -40,10 +39,10 @@ public final class FileSystem implements Closeable {
      */
     public FileSystem(URI uri) {
         try {
-            fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap(), null);
+            fs = FileSystems.newFileSystem(uri, Collections.emptyMap(), null);
         } catch (IOException|IllegalArgumentException e) {
             LOGGER.debug("Using default FS because of an error: {}", e.getMessage());
-            fileSystem = FileSystems.getDefault();
+            fs = FileSystems.getDefault();
             defaultFileSystem = true;
         }
     }
@@ -53,7 +52,7 @@ public final class FileSystem implements Closeable {
     public void close() throws IOException {
         // The default file system is actually not closeable, see https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html
         if (!defaultFileSystem) {
-            fileSystem.close();
+            fs.close();
         }
     }
 
@@ -68,7 +67,7 @@ public final class FileSystem implements Closeable {
      */
     public Stream<Path> readDirectory(URI uri) throws IOException {
         List<Path> paths = new ArrayList<>();
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(fileSystem.provider().getPath(uri))) {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(fs.provider().getPath(uri))) {
             for (Path entry: stream) {
                 paths.add(entry);
             }

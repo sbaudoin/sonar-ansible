@@ -18,12 +18,10 @@ package org.sonar.plugins.ansible.rules;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.batch.rule.Checks;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.issue.NewIssue;
 import org.sonar.api.batch.sensor.issue.NewIssueLocation;
-import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
@@ -39,7 +37,6 @@ import java.util.*;
 public abstract class AbstractAnsibleSensor implements Sensor {
     private static final Logger LOGGER = Loggers.get(AbstractAnsibleSensor.class);
 
-//    private final Checks<Object> checks;
     private final FileSystem fileSystem;
     private final FilePredicate mainFilesPredicate;
     private final Map<URI, Set<String>> allIssues = new HashMap<>();
@@ -48,7 +45,6 @@ public abstract class AbstractAnsibleSensor implements Sensor {
 
     protected AbstractAnsibleSensor(FileSystem fileSystem/*, Checks<Object> checks, FileLinesContextFactory fileLinesContextFactory*/) {
         this.fileSystem = fileSystem;
-//        this.checks = checks;
         this.mainFilesPredicate = fileSystem.predicates().and(
                 fileSystem.predicates().hasType(InputFile.Type.MAIN),
                 fileSystem.predicates().hasLanguage(YamlLanguage.KEY));

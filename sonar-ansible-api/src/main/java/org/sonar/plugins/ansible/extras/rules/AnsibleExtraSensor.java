@@ -16,13 +16,10 @@
 package org.sonar.plugins.ansible.extras.rules;
 
 import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
-import org.sonar.plugins.ansible.checks.AnsibleCheckRepository;
 import org.sonar.plugins.ansible.rules.AbstractAnsibleSensor;
 import org.sonar.plugins.yaml.languages.YamlLanguage;
 
@@ -45,11 +42,9 @@ public final class AnsibleExtraSensor extends AbstractAnsibleSensor {
      * Constructor
      *
      * @param fileSystem the file system on which the sensor will find the files to be analyzed
-     * @param checkFactory check factory used to get the checks to execute against the files
-     * @param fileLinesContextFactory factory used to report measures
      */
-    public AnsibleExtraSensor(FileSystem fileSystem, CheckFactory checkFactory/*, FileLinesContextFactory fileLinesContextFactory*/) {
-        super(fileSystem/*, checkFactory.create(AnsibleCheckRepository.REPOSITORY_KEY), fileLinesContextFactory*/);
+    public AnsibleExtraSensor(FileSystem fileSystem) {
+        super(fileSystem);
     }
 
 
@@ -96,13 +91,11 @@ public final class AnsibleExtraSensor extends AbstractAnsibleSensor {
         }
         try (org.sonar.plugins.ansible.util.FileSystem fs = new org.sonar.plugins.ansible.util.FileSystem(extraRulesDir.toURI())) {
             LOGGER.debug("Copying extra-rules...");
-            try {
-                fs.readDirectory(extraRulesDir.toURI()).forEach(entry -> copyExtraRule(entry, tempDir));
-            } catch (DirectoryIteratorException e) {
-                // I/O error encountered during the iteration, the cause is an IOException
-                LOGGER.error("Error reading extra-rules directory", e);
-                return null;
-            }
+            fs.readDirectory(extraRulesDir.toURI()).forEach(entry -> copyExtraRule(entry, tempDir));
+        } catch (DirectoryIteratorException e) {
+            // I/O error encountered during the iteration, the cause is an IOException
+            LOGGER.error("Error reading extra-rules directory", e);
+            return null;
         } catch (URISyntaxException e) {
             LOGGER.error("Cannot find additional ansible lint rules", e);
             return null;

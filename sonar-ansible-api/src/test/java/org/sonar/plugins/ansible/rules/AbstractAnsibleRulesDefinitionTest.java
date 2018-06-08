@@ -31,8 +31,9 @@ public class AbstractAnsibleRulesDefinitionTest {
     public LogTester logTester = new LogTester();
 
     @org.junit.Test
-    public void testDefine() {
-        MyRulesDefinition rulesDefinition = new MyRulesDefinition();
+    public void testDefineWithExistingRules() {
+        // Existing rules
+        MyRulesDefinition rulesDefinition = new MyRulesDefinition("my-rules");
         RulesDefinition.Context context = new RulesDefinition.Context();
         rulesDefinition.define(context);
         RulesDefinition.Repository repository = context.repository(AnsibleCheckRepository.REPOSITORY_KEY);
@@ -46,7 +47,6 @@ public class AbstractAnsibleRulesDefinitionTest {
         RulesDefinition.Rule aRule = repository.rule("rule1");
         assertNotNull(aRule);
         assertEquals("Any rule", aRule.name());
-
         // No templates
         assertEquals(0L, repository.rules().stream().filter(RulesDefinition.Rule::template).map(RulesDefinition.Rule::key).count());
 
@@ -57,11 +57,31 @@ public class AbstractAnsibleRulesDefinitionTest {
         }
     }
 
+    @org.junit.Test
+    public void testDefineWithNonExistingRules() {
+        // Existing rules
+        MyRulesDefinition rulesDefinition = new MyRulesDefinition("no-rules");
+        RulesDefinition.Context context = new RulesDefinition.Context();
+        rulesDefinition.define(context);
+        RulesDefinition.Repository repository = context.repository(AnsibleCheckRepository.REPOSITORY_KEY);
+
+        assertTrue(repository.rules().isEmpty());
+        // Expected an info message for rules not found
+        assertTrue(logTester.logs(LoggerLevel.INFO).contains("No Ansible Lint rules found"));
+    }
+
 
     private class MyRulesDefinition extends AbstractAnsibleRulesDefinition {
+        String path;
+
+        public MyRulesDefinition(String path) {
+            this.path = path;
+        }
+
+
         @Override
         protected String getRuleDefinitionPath() {
-            return "my-rules";
+            return path;
         }
     }
 }
