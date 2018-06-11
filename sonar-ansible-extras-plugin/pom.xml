@@ -17,13 +17,13 @@
 
     <properties>
         <!-- Give the full name of your plugin class -->
-        <sonar.pluginClass>org.sonar.plugins.ansible.extras.AnsibleExtrasPlugin</sonar.pluginClass>
+        <sonar.pluginClass>com.github.sbaudoin.sonar.plugins.ansible.extras.AnsibleExtrasPlugin</sonar.pluginClass>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.sonarsource.ansible</groupId>
+            <groupId>com.github.sbaudoin</groupId>
             <artifactId>sonar-ansible-api</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
