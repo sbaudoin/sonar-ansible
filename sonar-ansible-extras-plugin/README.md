@@ -7,6 +7,8 @@ Due to technical constraints the chosen extension mechanism is based on a SonarQ
 
 There are two ways to add lint rules and create the plugin: the regular one and the hacker's one. Choose the one you prefer (if you are not comfortable with Java, choose the hacker's way) but be aware that some restrictions apply to the hacker's way. In both cases there are some mandatory steps (writing your ansible-lint rule and some desriptor files) so let's start from that first.
 
+**Be aware that we cannot be taken responsible for problems you might encounter with the custom rules you had to this plugin.**
+
 ## Common steps
 1. Write your custom Python Ansible Lint rule. During so you have decided for an ID for your rule. Let's say this ID is `ruleID`. It will be used right hereafter to name some files.
 2. Create 2 descriptor files for your rule as follows:
