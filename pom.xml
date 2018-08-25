@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.sbaudoin</groupId>
     <artifactId>sonar-ansible</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>SonarQube Ansible</name>
@@ -67,7 +67,7 @@
             <dependency>
                 <groupId>com.github.sbaudoin</groupId>
                 <artifactId>sonar-yaml-plugin</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
