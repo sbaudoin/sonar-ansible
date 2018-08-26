@@ -39,6 +39,7 @@
         <url>https://github.com/sbaudoin/sonar-ansible</url>
         <tag>HEAD</tag>
     </scm>
+
     <issueManagement>
         <system>GitHub</system>
         <url>https://github.com/sbaudoin/sonar-ansible/issues</url>
@@ -46,11 +47,27 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <release.repo.url>https://oss.sonatype.org/service/local/staging/deploy/maven2</release.repo.url>
+        <snapshot.repo.url>https://oss.sonatype.org/content/repositories/snapshots</snapshot.repo.url>
         <sonar.apiVersion>6.6</sonar.apiVersion>
         <jdk.min.version>1.8</jdk.min.version>
         <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
         <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
     </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <name>Release Repository</name>
+            <url>${release.repo.url}</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <name>Snapshots Repository</name>
+            <url>${snapshot.repo.url}</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
