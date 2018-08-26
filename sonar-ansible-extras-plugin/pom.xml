@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <!-- Change the groupId, artifactId according to your organization -->
-    <groupId>org.sonarsource.ansible</groupId>
+    <groupId>com.github.sbaudoin</groupId>
     <!-- Follow the SonarQube standard if possible: sonar-xxx-plugin -->
     <artifactId>sonar-ansible-extras-plugin</artifactId>
     <!-- Also give a version to your plugin. Good practices make the version to be incremented every time you change the content of the plugin. -->
