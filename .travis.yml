@@ -23,7 +23,7 @@ deploy:
     script: bash .travis/deploy.sh
     skip_cleanup: true
     on:
-      repo: sbaudoin/sonar-yaml
+      repo: sbaudoin/sonar-ansible
       all_branches: true
   - provider: releases
     api_key:
