@@ -86,6 +86,6 @@ public abstract class AbstractAnsibleRulesDefinition implements RulesDefinition 
     }
 
     private boolean htmlDescFileExists(Path definitionFile) {
-        return Files.exists(definitionFile.resolveSibling(getRuleKey(definitionFile) + ".html"));
+        return definitionFile.resolveSibling(getRuleKey(definitionFile) + ".html").toFile().exists();
     }
 }
