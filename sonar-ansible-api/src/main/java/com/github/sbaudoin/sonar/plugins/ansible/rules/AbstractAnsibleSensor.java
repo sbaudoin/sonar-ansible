@@ -69,7 +69,12 @@ public abstract class AbstractAnsibleSensor implements Sensor {
             // Execute Ansible Lint and get a parsable output
             List<String> output = new ArrayList<>();
             List<String> error = new ArrayList<>();
-            executeCommand(command, output, error);
+            try {
+                executeCommand(command, output, error);
+            } catch (InterruptedException|IOException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
             if (!error.isEmpty()) {
                 LOGGER.warn("Errors happened during analysis:{}{}",
                         System.getProperty("line.separator"),
@@ -100,8 +105,12 @@ public abstract class AbstractAnsibleSensor implements Sensor {
      * @param stdOut where the standard output is written to line by line
      * @param errOut where the error output is written to
      * @return the command exit code
+     * @throws IOException,InterruptedIOException if an error occurred executing the command. See {@link ProcessBuilder#start()}
+     *                                            and {@link Process#waitFor()}
+     * @see ProcessBuilder#start()
+     * @see Process#waitFor()
      */
-    protected int executeCommand(List<String> command, List<String> stdOut, List<String> errOut) {
+    protected int executeCommand(List<String> command, List<String> stdOut, List<String> errOut) throws InterruptedException, IOException {
         assert stdOut != null;
         assert errOut != null;
 
@@ -128,6 +137,7 @@ public abstract class AbstractAnsibleSensor implements Sensor {
             errOut.addAll(errOutputReader.getOutput());
         } catch (InterruptedException|IOException e) {
             LOGGER.error("Error executing command", e);
+            throw e;
         }
         return status;
     }
