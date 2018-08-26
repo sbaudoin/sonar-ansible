@@ -65,6 +65,7 @@ On SonarQube, you must have the [YAML SonarQube plugin](https://github.com/sbaud
     * `artifactId`: technical identifier of the plugin within the groupId. It is strongly recommended to follow the SonarQube standard: `sonar-xxx-plugin`
     * `version`: version the plugin. You should increment the version every time you update the plugin.
     * Give a name and description to your plugin
+    * Update or remove the `<ditributionManagement>` section
     * `sonar.pluginClass`: give there the complete name of your plugin class (see next step below)
 2. Create the directory structure as follows:
 
