@@ -34,15 +34,48 @@ import java.io.*;
 import java.net.URI;
 import java.util.*;
 
+/**
+ * Abstract class for sensors that takes in charge the execution of {@code ansible-lint}. The sensors just have to
+ * extend this class, prepare the arguments of {@code ansible-lint} command line in a list and call the
+ * {@link #executeCommand(List, List, List)} method in their own {@link #execute(SensorContext)} method. The method
+ * {@link #executeCommand(List, List, List)} will automatically deal with the files to be analyzed (the last argument)
+ * as well as the formatting options, so child classes should only manage the other command options/arguments.
+ * See {@link com.github.sbaudoin.sonar.plugins.ansible.rules.AnsibleSensor} and
+ * {@link com.github.sbaudoin.sonar.plugins.ansible.extras.rules.AnsibleExtraSensor} for examples.
+ *
+ * @see <a href="https://github.com/willthames/ansible-lint">https://github.com/willthames/ansible-lint</a>
+ */
 public abstract class AbstractAnsibleSensor implements Sensor {
     private static final Logger LOGGER = Loggers.get(AbstractAnsibleSensor.class);
 
+    /**
+     * The underlying file system that will give access to the files to be analyzed
+     */
     protected final FileSystem fileSystem;
+
+    /**
+     * File predicate to filter and select the files to be analyzed with this sensor
+     */
     protected final FilePredicate mainFilesPredicate;
+
+    /**
+     * All issues found on the analyzed code. This key is the URI to the files where the issues were found and the
+     * value is the issue message returned by {@code ansible-lint}
+     */
     protected final Map<URI, Set<String>> allIssues = new HashMap<>();
+
+    /**
+     * The list of files analyzed by this sensor. As {@code ansible-lint} will not aggregate the issues per file,
+     * the result of {@link InputFile#uri()} will be used as the key for {@link #allIssues}.
+     */
     protected final Set<InputFile> scannedFiles = new HashSet<>();
 
 
+    /**
+     * Constructor
+     *
+     * @param fileSystem the underlying file system that will give access to the files to be analyzed
+     */
     protected AbstractAnsibleSensor(FileSystem fileSystem) {
         this.fileSystem = fileSystem;
         this.mainFilesPredicate = fileSystem.predicates().and(
@@ -51,6 +84,12 @@ public abstract class AbstractAnsibleSensor implements Sensor {
     }
 
 
+    /**
+     * Executes {@code ansible-lint} with the passed options and saves the issues detected with this tool
+     *
+     * @param context the execution sensor context (taken from the method {@link #execute(SensorContext)} of the child class)
+     * @param extraAnsibleLintArgs the optional list of command arguments for {@code ansible-lint}. May be {@code null}.
+     */
     protected void executeWithAnsibleLint(SensorContext context, @Nullable List<String> extraAnsibleLintArgs) {
         LOGGER.debug("Ansible sensor executed with context: " + context);
 
@@ -92,13 +131,20 @@ public abstract class AbstractAnsibleSensor implements Sensor {
         saveIssues(context);
     }
 
+    /**
+     * Returns the plugin configuration parameter (settings) that defines the path to the command {@code ansible-lint}
+     *
+     * @param context the execution sensor context (taken from the method {@link #execute(SensorContext)} of the child class)
+     * @return the path to the command {@code ansible-lint} or {@literal ansible-lint} if the plugin setting is not set
+     * @see AnsibleSettings#ANSIBLE_LINT_PATH_KEY
+     */
     protected String getAnsibleLintPath(SensorContext context) {
         Optional<String> path = context.config().get(AnsibleSettings.ANSIBLE_LINT_PATH_KEY);
         return (path.isPresent())?path.get():"ansible-lint";
     }
 
     /**
-     * Executes a system command and write the standard and error outputs to the passed
+     * Executes a system command and writes the standard and error outputs to the passed
      * <code>StringBuilder</code> if not <code>null</code>
      *
      * @param command the command to be executed
@@ -142,6 +188,12 @@ public abstract class AbstractAnsibleSensor implements Sensor {
         return status;
     }
 
+    /**
+     * Adds the passed issue (containing the filename and the issue message) to the list of known issues
+     *
+     * @param rawIssue an issue as returned by {@code ansible-lint}
+     * @see #allIssues
+     */
     protected void registerIssue(String rawIssue) {
         String[] tokens = rawIssue.split(":", 2);
 
@@ -153,6 +205,11 @@ public abstract class AbstractAnsibleSensor implements Sensor {
         allIssues.get(fileURI).add(tokens[1]);
     }
 
+    /**
+     * Saves all found issues in SonarQube. Only the issues of analyzed files will be saved.
+     *
+     * @param context the execution sensor context (taken from the method {@link #execute(SensorContext)} of the child class)
+     */
     protected void saveIssues(SensorContext context) {
         for (InputFile inputFile : scannedFiles) {
             LOGGER.debug("Saving issues for {}", inputFile.uri());
@@ -202,6 +259,9 @@ public abstract class AbstractAnsibleSensor implements Sensor {
     }
 
 
+    /**
+     * Reader class for {@code ansible-lint} output
+     */
     private class LineInputReader extends Thread {
         private List<String> output = new ArrayList<>();
         private BufferedReader input;
