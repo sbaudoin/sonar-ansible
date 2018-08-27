@@ -37,13 +37,13 @@ import java.util.*;
 public abstract class AbstractAnsibleSensor implements Sensor {
     private static final Logger LOGGER = Loggers.get(AbstractAnsibleSensor.class);
 
-    private final FileSystem fileSystem;
-    private final FilePredicate mainFilesPredicate;
-    private final Map<URI, Set<String>> allIssues = new HashMap<>();
-    private final Set<InputFile> scannedFiles = new HashSet<>();
+    protected final FileSystem fileSystem;
+    protected final FilePredicate mainFilesPredicate;
+    protected final Map<URI, Set<String>> allIssues = new HashMap<>();
+    protected final Set<InputFile> scannedFiles = new HashSet<>();
 
 
-    protected AbstractAnsibleSensor(FileSystem fileSystem/*, Checks<Object> checks, FileLinesContextFactory fileLinesContextFactory*/) {
+    protected AbstractAnsibleSensor(FileSystem fileSystem) {
         this.fileSystem = fileSystem;
         this.mainFilesPredicate = fileSystem.predicates().and(
                 fileSystem.predicates().hasType(InputFile.Type.MAIN),
