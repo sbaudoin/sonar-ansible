@@ -40,9 +40,10 @@ import org.sonar.api.utils.log.LoggerLevel;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.*;
 
 import static com.github.sbaudoin.sonar.plugins.ansible.Utils.issueExists;
 import static org.junit.Assert.*;
@@ -77,6 +78,7 @@ public class AbstractAnsibleSensorTest {
             context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src\\test\\resources\\scripts\\ansible-lint1.cmd");
         } else {
             context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src/test/resources/scripts/ansible-lint1.sh");
+            setShellRights("src/test/resources/scripts/ansible-lint1.sh");
         }
 
         sensor.executeWithAnsibleLint(context, null);
@@ -98,6 +100,7 @@ public class AbstractAnsibleSensorTest {
             context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src\\test\\resources\\scripts\\ansible-lint2.cmd");
         } else {
             context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src/test/resources/scripts/ansible-lint2.sh");
+            setShellRights("src/test/resources/scripts/ansible-lint2.sh");
         }
 
         sensor.executeWithAnsibleLint(context, null);
@@ -122,6 +125,7 @@ public class AbstractAnsibleSensorTest {
             context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src\\test\\resources\\scripts\\ansible-lint3.cmd");
         } else {
             context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src/test/resources/scripts/ansible-lint3.sh");
+            setShellRights("src/test/resources/scripts/ansible-lint3.sh");
         }
 
         sensor.executeWithAnsibleLint(context, Arrays.asList("foo", "bar"));
@@ -284,6 +288,17 @@ public class AbstractAnsibleSensorTest {
         when(fileLinesContextFactory.createFor(any(InputFile.class))).thenReturn(mock(FileLinesContext.class));
 
         sensor = new MySensor(fs);
+    }
+
+    private void setShellRights(String path) throws IOException {
+        Set<PosixFilePermission> perms = new HashSet<>();
+        perms.add(PosixFilePermission.OWNER_READ);
+        perms.add(PosixFilePermission.OWNER_EXECUTE);
+        perms.add(PosixFilePermission.GROUP_READ);
+        perms.add(PosixFilePermission.GROUP_EXECUTE);
+        perms.add(PosixFilePermission.OTHERS_READ);
+        perms.add(PosixFilePermission.OTHERS_EXECUTE);
+        Files.setPosixFilePermissions(Paths.get(path), perms);
     }
 
 

@@ -28,7 +28,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.nio.file.*;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import static com.github.sbaudoin.sonar.plugins.ansible.Utils.issueExists;
@@ -65,6 +68,15 @@ public class AnsibleExtraSensorTest {
             context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src\\test\\resources\\scripts\\ansible-lint4.cmd");
         } else {
             context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src/test/resources/scripts/ansible-lint4.sh");
+            Set<PosixFilePermission> perms = new HashSet<>();
+            perms.add(PosixFilePermission.OWNER_READ);
+            perms.add(PosixFilePermission.OWNER_EXECUTE);
+            perms.add(PosixFilePermission.GROUP_READ);
+            perms.add(PosixFilePermission.GROUP_EXECUTE);
+            perms.add(PosixFilePermission.OTHERS_READ);
+            perms.add(PosixFilePermission.OTHERS_EXECUTE);
+            Files.setPosixFilePermissions(Paths.get("src/test/resources/scripts/ansible-lint4.sh"), perms);
+
         }
 
         DummySensorDescriptor descriptor = new DummySensorDescriptor();
