@@ -123,7 +123,7 @@ public abstract class AbstractAnsibleSensor implements Sensor {
 
             LOGGER.debug(output.size() + " issue(s) found");
             // Parse output and register all issues: as ansible-lint processes only playbooks but returns issues related to
-            // used roles, we need to save all issues first before being able to to get role issues and save them
+            // used roles, we need to save all issues first before being able to get role issues and save them
             output.forEach(this::registerIssue);
         }
 
@@ -162,7 +162,6 @@ public abstract class AbstractAnsibleSensor implements Sensor {
 
         LOGGER.debug("Executing command: {}", command);
 
-        int status = 1;
         try {
             ProcessBuilder pb = new ProcessBuilder(command);
             Process p = pb.start();
@@ -174,27 +173,34 @@ public abstract class AbstractAnsibleSensor implements Sensor {
             LineInputReader errOutputReader = new LineInputReader(p.getErrorStream());
             errOutputReader.start();
 
-            status = p.waitFor();
+            int status = p.waitFor();
 
             // Create standard output lines
             stdOut.addAll(stdOutputReader.getOutput());
 
             // Write error output if any
             errOut.addAll(errOutputReader.getOutput());
+
+            return status;
         } catch (InterruptedException|IOException e) {
             LOGGER.error("Error executing command", e);
             throw e;
         }
-        return status;
     }
 
     /**
      * Adds the passed issue (containing the filename and the issue message) to the list of known issues
      *
-     * @param rawIssue an issue as returned by {@code ansible-lint}
+     * @param rawIssue an issue as returned by {@code ansible-lint}. The issue must be of the form: "filename:[0-9]+: [E...] ..."
+     * @return {@code true} if the issue has been registered, {@code false} if not
      * @see #allIssues
      */
-    protected void registerIssue(String rawIssue) {
+    protected boolean registerIssue(String rawIssue) {
+        if (!rawIssue.matches("^.+:[0-9]+: \\[E.+\\] .+$")) {
+            LOGGER.warn("Invalid issue syntax, ignoring: " + rawIssue);
+            return false;
+        }
+
         String[] tokens = rawIssue.split(":", 2);
 
         URI fileURI = new File(tokens[0]).toURI();
@@ -203,10 +209,13 @@ public abstract class AbstractAnsibleSensor implements Sensor {
             allIssues.put(fileURI, new HashSet<>());
         }
         allIssues.get(fileURI).add(tokens[1]);
+
+        return true;
     }
 
     /**
      * Saves all found issues in SonarQube. Only the issues of analyzed files will be saved.
+     *  Issues to be saved must have been registered first with {@link #registerIssue(String)}.
      *
      * @param context the execution sensor context (taken from the method {@link #execute(SensorContext)} of the child class)
      */
@@ -215,6 +224,7 @@ public abstract class AbstractAnsibleSensor implements Sensor {
             LOGGER.debug("Saving issues for {}", inputFile.uri());
             Set<String> issues = allIssues.getOrDefault(inputFile.uri(), new HashSet<>());
             for (String issue : issues) {
+                // Saved issues must have been registered first, so we are sure there is an extra :
                 String[] tokens = issue.split(":", 2);
                 LOGGER.debug("  Saving issue: {}", issue);
                 String[] ruleTokens = tokens[1].trim().split("\\] ", 2);

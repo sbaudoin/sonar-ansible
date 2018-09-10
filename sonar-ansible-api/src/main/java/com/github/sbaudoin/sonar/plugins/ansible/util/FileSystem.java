@@ -41,9 +41,13 @@ public final class FileSystem implements Closeable {
         try {
             fs = FileSystems.newFileSystem(uri, Collections.emptyMap(), null);
         } catch (IOException|IllegalArgumentException e) {
-            LOGGER.debug("Using default FS because of an error: {}", e.getMessage());
+            LOGGER.warn("Using default FS because of an error: {}", e.getMessage());
             fs = FileSystems.getDefault();
             defaultFileSystem = true;
+        } catch (FileSystemAlreadyExistsException e) {
+            LOGGER.warn("FS already exists for URI: {}", uri.toString());
+            fs = FileSystems.getFileSystem(uri);
+            defaultFileSystem = fs == FileSystems.getDefault();
         }
     }
 
@@ -57,8 +61,10 @@ public final class FileSystem implements Closeable {
     }
 
     /**
+     * Reads and returns the 1st-level content of the passed directory described as a URI. This URI must be compatible
+     * with the file system.
      *
-     * @param uri
+     * @param uri an URI to a directory
      * @return
      * @throws IOException
      * @throws NotDirectoryException if the file could not otherwise be opened because it is not a directory (optional specific exception)

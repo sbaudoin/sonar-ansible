@@ -15,6 +15,9 @@
  */
 package com.github.sbaudoin.sonar.plugins.ansible.rules;
 
+import com.github.sbaudoin.sonar.plugins.ansible.extras.rules.AnsibleExtraRulesDefinition;
+import org.junit.Rule;
+import org.junit.Test;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.utils.log.LogTester;
 import org.sonar.api.utils.log.LoggerLevel;
@@ -27,13 +30,25 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 public class AbstractAnsibleRulesDefinitionTest {
-    @org.junit.Rule
+    @Rule
     public LogTester logTester = new LogTester();
 
-    @org.junit.Test
+    @Test
     public void testDefineWithExistingRules() {
+        AbstractAnsibleRulesDefinition definition = new MyRulesDefinition("my-rules");
+        assertEquals("my-rules", definition.getRuleDefinitionPath());
+        testDefineWithExistingRules(definition, false);
+    }
+
+    @Test
+    public void testExtras() {
+        AbstractAnsibleRulesDefinition definition = new AnsibleExtraRulesDefinition();
+        assertEquals("org/sonar/l10n/ansible/rules/ansible-extras", definition.getRuleDefinitionPath());
+        testDefineWithExistingRules(definition, true);
+    }
+
+    private void testDefineWithExistingRules(AbstractAnsibleRulesDefinition rulesDefinition, boolean extra) {
         // Existing rules
-        MyRulesDefinition rulesDefinition = new MyRulesDefinition("my-rules");
         RulesDefinition.Context context = new RulesDefinition.Context();
         rulesDefinition.define(context);
         RulesDefinition.Repository repository = context.repository(AnsibleCheckRepository.REPOSITORY_KEY);
@@ -42,9 +57,9 @@ public class AbstractAnsibleRulesDefinitionTest {
         assertEquals(YamlLanguage.KEY, repository.language());
         assertEquals(1, repository.rules().size());
         // Expected a warning message for rule2 that has no .html file
-        assertTrue(logTester.logs(LoggerLevel.WARN).contains("Rule rule2 defined but not described (.html file missing)"));
+        assertTrue(logTester.logs(LoggerLevel.WARN).contains("Rule " + (extra?"extra-":"") + "rule2 defined but not described (.html file missing)"));
 
-        RulesDefinition.Rule aRule = repository.rule("rule1");
+        RulesDefinition.Rule aRule = repository.rule((extra?"extra-":"") + "rule1");
         assertNotNull(aRule);
         assertEquals("Any rule", aRule.name());
         // No templates
@@ -57,7 +72,7 @@ public class AbstractAnsibleRulesDefinitionTest {
         }
     }
 
-    @org.junit.Test
+    @Test
     public void testDefineWithNonExistingRules() {
         // Existing rules
         MyRulesDefinition rulesDefinition = new MyRulesDefinition("no-rules");
@@ -68,6 +83,11 @@ public class AbstractAnsibleRulesDefinitionTest {
         assertTrue(repository.rules().isEmpty());
         // Expected an info message for rules not found
         assertTrue(logTester.logs(LoggerLevel.INFO).contains("No Ansible Lint rules found"));
+    }
+
+    @Test
+    public void testDefineWithKeyError1() {
+
     }
 
 
