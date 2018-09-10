@@ -169,6 +169,7 @@ public class AbstractAnsibleSensorTest {
             } else {
                 command.add("sh");
                 command.add("src/test/resources/scripts/echo.sh");
+                setShellRights("src/test/resources/scripts/echo.sh");
             }
             command.add("foo");
             sensor.executeCommand(command, stdOut, stdErr);
