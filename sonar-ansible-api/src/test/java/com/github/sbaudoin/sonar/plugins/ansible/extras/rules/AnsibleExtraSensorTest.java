@@ -64,7 +64,7 @@ public class AnsibleExtraSensorTest {
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
             context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src\\test\\resources\\scripts\\ansible-lint4.cmd");
         } else {
-            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src\\test\\resources\\scripts\\ansible-lint4.sh");
+            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src/test/resources/scripts/ansible-lint4.sh");
         }
 
         DummySensorDescriptor descriptor = new DummySensorDescriptor();

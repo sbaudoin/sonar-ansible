@@ -76,7 +76,7 @@ public class AbstractAnsibleSensorTest {
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
             context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src\\test\\resources\\scripts\\ansible-lint1.cmd");
         } else {
-            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src\\test\\resources\\scripts\\ansible-lint1.sh");
+            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src/test/resources/scripts/ansible-lint1.sh");
         }
 
         sensor.executeWithAnsibleLint(context, null);
@@ -97,7 +97,7 @@ public class AbstractAnsibleSensorTest {
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
             context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src\\test\\resources\\scripts\\ansible-lint2.cmd");
         } else {
-            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src\\test\\resources\\scripts\\ansible-lint2.sh");
+            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src/test/resources/scripts/ansible-lint2.sh");
         }
 
         sensor.executeWithAnsibleLint(context, null);
@@ -121,7 +121,7 @@ public class AbstractAnsibleSensorTest {
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
             context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src\\test\\resources\\scripts\\ansible-lint3.cmd");
         } else {
-            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src\\test\\resources\\scripts\\ansible-lint3.sh");
+            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src/test/resources/scripts/ansible-lint3.sh");
         }
 
         sensor.executeWithAnsibleLint(context, Arrays.asList("foo", "bar"));
