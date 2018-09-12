@@ -1,3 +1,18 @@
+/**
+ * Copyright (c) 2018, Sylvain Baudoin
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.github.sbaudoin.sonar.plugins.ansible.extras.rules;
 
 import com.github.sbaudoin.sonar.plugins.ansible.Utils;
@@ -35,6 +50,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import static com.github.sbaudoin.sonar.plugins.ansible.Utils.issueExists;
+import static com.github.sbaudoin.sonar.plugins.ansible.Utils.setShellRights;
 import static com.github.sbaudoin.sonar.plugins.ansible.extras.rules.AnsibleExtraSensor.EXTRA_RULES_TEMP_DIR;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -68,15 +84,7 @@ public class AnsibleExtraSensorTest {
             context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src\\test\\resources\\scripts\\ansible-lint4.cmd");
         } else {
             context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src/test/resources/scripts/ansible-lint4.sh");
-            Set<PosixFilePermission> perms = new HashSet<>();
-            perms.add(PosixFilePermission.OWNER_READ);
-            perms.add(PosixFilePermission.OWNER_EXECUTE);
-            perms.add(PosixFilePermission.GROUP_READ);
-            perms.add(PosixFilePermission.GROUP_EXECUTE);
-            perms.add(PosixFilePermission.OTHERS_READ);
-            perms.add(PosixFilePermission.OTHERS_EXECUTE);
-            Files.setPosixFilePermissions(Paths.get("src/test/resources/scripts/ansible-lint4.sh"), perms);
-
+            setShellRights("src/test/resources/scripts/ansible-lint4.sh");
         }
 
         DummySensorDescriptor descriptor = new DummySensorDescriptor();

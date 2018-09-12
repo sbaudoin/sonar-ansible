@@ -46,6 +46,7 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.util.*;
 
 import static com.github.sbaudoin.sonar.plugins.ansible.Utils.issueExists;
+import static com.github.sbaudoin.sonar.plugins.ansible.Utils.setShellRights;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.powermock.api.mockito.PowerMockito.mock;
@@ -167,7 +168,6 @@ public class AbstractAnsibleSensorTest {
             if (System.getProperty("os.name").toLowerCase().contains("windows")) {
                 command.add("src\\test\\resources\\scripts\\echo.cmd");
             } else {
-                command.add("sh");
                 command.add("src/test/resources/scripts/echo.sh");
                 setShellRights("src/test/resources/scripts/echo.sh");
             }
@@ -182,7 +182,7 @@ public class AbstractAnsibleSensorTest {
             stdErr.clear();
             sensor.executeCommand(Arrays.asList("java", "-version"), stdOut, stdErr);
             assertEquals(0, stdOut.size());
-            assertEquals(3, stdErr.size());
+            assertNotEquals(0, stdErr.size());
         } catch (Exception e) {
             fail("Command not executed: " + e.getMessage());
         }
@@ -289,17 +289,6 @@ public class AbstractAnsibleSensorTest {
         when(fileLinesContextFactory.createFor(any(InputFile.class))).thenReturn(mock(FileLinesContext.class));
 
         sensor = new MySensor(fs);
-    }
-
-    private void setShellRights(String path) throws IOException {
-        Set<PosixFilePermission> perms = new HashSet<>();
-        perms.add(PosixFilePermission.OWNER_READ);
-        perms.add(PosixFilePermission.OWNER_EXECUTE);
-        perms.add(PosixFilePermission.GROUP_READ);
-        perms.add(PosixFilePermission.GROUP_EXECUTE);
-        perms.add(PosixFilePermission.OTHERS_READ);
-        perms.add(PosixFilePermission.OTHERS_EXECUTE);
-        Files.setPosixFilePermissions(Paths.get(path), perms);
     }
 
 
