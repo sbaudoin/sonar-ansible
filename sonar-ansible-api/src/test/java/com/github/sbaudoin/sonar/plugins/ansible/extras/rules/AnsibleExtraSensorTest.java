@@ -57,7 +57,7 @@ import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({AnsibleExtraSensor.class, ClassLoader.class})
+@PrepareForTest({AnsibleExtraSensor.class})
 public class AnsibleExtraSensorTest {
     private static final String RULE_ID1 = "AnyCheck1";
     private static final String RULE_ID2 = "AnyCheck2";
