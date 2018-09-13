@@ -287,10 +287,6 @@ public abstract class AbstractAnsibleSensor implements Sensor {
 
 
         public LineInputReader(InputStream input) {
-            LOGGER.debug("new LineInputReader({})", input.toString());
-            if (input == null) {
-                throw new IllegalArgumentException("input cannot be null");
-            }
             this.input = new BufferedReader(new InputStreamReader(input));
         }
 
