@@ -43,10 +43,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.nio.file.*;
-import java.nio.file.attribute.PosixFilePermission;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.function.Predicate;
 
 import static com.github.sbaudoin.sonar.plugins.ansible.Utils.issueExists;
