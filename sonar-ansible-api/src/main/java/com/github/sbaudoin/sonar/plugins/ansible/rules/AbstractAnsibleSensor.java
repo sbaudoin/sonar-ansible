@@ -169,9 +169,17 @@ public abstract class AbstractAnsibleSensor implements Sensor {
             // Read standard output
             LineInputReader stdOutputReader = new LineInputReader(p.getInputStream());
             stdOutputReader.start();
+            // Wait for thread to be ready
+            while (!stdOutputReader.isReady()) {
+                Thread.sleep(100);
+            }
             // Get error output
             LineInputReader errOutputReader = new LineInputReader(p.getErrorStream());
             errOutputReader.start();
+            // Wait for thread to be ready
+            while (!errOutputReader.isReady()) {
+                Thread.sleep(100);
+            }
 
             int status = p.waitFor();
 
@@ -275,9 +283,11 @@ public abstract class AbstractAnsibleSensor implements Sensor {
     private class LineInputReader extends Thread {
         private List<String> output = new ArrayList<>();
         private BufferedReader input;
+        private boolean ready = false;
 
 
         public LineInputReader(InputStream input) {
+            LOGGER.debug("new LineInputReader({})", input.toString());
             if (input == null) {
                 throw new IllegalArgumentException("input cannot be null");
             }
@@ -286,8 +296,9 @@ public abstract class AbstractAnsibleSensor implements Sensor {
 
         @Override
         public void run() {
-            String line;
             try {
+                String line;
+                ready = true;
                 while ((line = input.readLine()) != null) {
                     output.add(line);
                     LOGGER.trace("Read from input: {}", line);
@@ -305,6 +316,10 @@ public abstract class AbstractAnsibleSensor implements Sensor {
 
         public List<String> getOutput() {
             return output;
+        }
+
+        public boolean isReady() {
+            return ready;
         }
     }
 }

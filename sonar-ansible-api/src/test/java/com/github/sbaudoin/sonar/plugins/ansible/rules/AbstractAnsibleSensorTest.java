@@ -172,15 +172,14 @@ public class AbstractAnsibleSensorTest {
                 setShellRights("src/test/resources/scripts/echo.sh");
             }
             command.add("foo");
-            sensor.executeCommand(command, stdOut, stdErr);
-            System.out.println(stdOut);
+            assertEquals(0, sensor.executeCommand(command, stdOut, stdErr));
             assertEquals(1, stdOut.size());
             assertEquals("foo", stdOut.get(0));
             assertEquals(0, stdErr.size());
 
             stdOut.clear();
             stdErr.clear();
-            sensor.executeCommand(Arrays.asList("java", "-version"), stdOut, stdErr);
+            assertEquals(0, sensor.executeCommand(Arrays.asList("java", "-version"), stdOut, stdErr));
             assertEquals(0, stdOut.size());
             assertNotEquals(0, stdErr.size());
         } catch (Exception e) {
