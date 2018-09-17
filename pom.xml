@@ -249,12 +249,6 @@
                         <artifactId>jacoco-maven-plugin</artifactId>
                         <version>${jacoco.version}</version>
                         <executions>
-                            <!--execution>
-                                <id>agent-for-ut</id>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                            </execution-->
                             <execution>
                                 <id>default-instrument</id>
                                 <goals>
