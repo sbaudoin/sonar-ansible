@@ -6,11 +6,13 @@ addons:
     organization: sbaudoin-github
     token:
       secure: qK+/79r64AkKy8Jt6heKrZ4GbTiFWcGB0/36tYh84TMwBGYFAqTD7AZpd6iuDZUHvSsQJQUWvijjIN7HE79uHhHGM0Fn72WuocCLEcB7FeAvwkvuRDFgF9u0DVs0dHPhz26fPDap1dGr8fjBviVtcqZhEFwVYowlfgv37Qf8PHIV6DC825C6YGLprhyAMlr+xOccqXsPynzYE+A4l6SwYLSfy9dMFkzhSF11Um/MFDgRC+DjT+KDcfHnikiYEl/QPOAWoclnNl6swFpE8vyjjJz1gZHNX2arU5VMbXJmiR/mLK6/kdCSOrhiNeOmo3YM7DmMahwtpOzMvLXugNi6AcSiqUarjfudrl3SUWnBI4QAoxi5/1FwbYcipgCltfQ7R/tpcGeHuL0qAO1vEEfaZgfYN8HXiDDDZut+rR6RYq9WhlX4iIPrEaPg9Jqz1+2Kp+lqpKY9z5thb2JpwqqyNq+VVQrXp1WPYKDABXPTj9wYwCr1M3afb7FDz5O3/MWQiIahYPoSfzrTBRJW8XP2Kxo6z6XLO1OKoNDIjopGmDFoK+d2c4MeoLhVWPrgbSqbsTV+nRToetxTh7tYHGnavbdBqI0SD8QVSPBgn0Dm67sAT036NScGWhP0iQiiMmQFb1gg3mailGfW9KwwJuLsjJSGIsELxfzyiwv+UbIjjjc=
-sudo: false
+sudo: required
+services:
+  - docker
 cache:
   directories:
-  - "$HOME/.m2/repository"
-  - "$HOME/.sonar/cache"
+    - "$HOME/.m2/repository"
+    - "$HOME/.sonar/cache"
 before_install:
   - if [ ! -z "$GPG_SECRET_KEYS" ]; then echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import; fi
   - if [ ! -z "$GPG_OWNERTRUST" ]; then echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust; fi
@@ -18,6 +20,10 @@ install:
   - mvn --settings .travis/settings.xml install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
 script:
   - mvn clean package sonar:sonar -P audit
+  - bash it/it.sh 6.6 3.2.0.1227
+  - bash it/it.sh 6.7 3.2.0.1227
+  - bash it/it.sh 7.0 3.2.0.1227
+  - bash it/it.sh 7.1 3.2.0.1227
 deploy:
   - provider: script
     script: bash .travis/deploy.sh

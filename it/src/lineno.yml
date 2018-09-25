@@ -1,0 +1,3 @@
+# No document start mark
+- tasks:
+  - git: repo=hello
