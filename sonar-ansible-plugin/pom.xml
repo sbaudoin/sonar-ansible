@@ -10,7 +10,7 @@
     <artifactId>sonar-ansible-plugin</artifactId>
     <packaging>sonar-plugin</packaging>
 
-    <name>SonarQube Ansible Plugin</name>
+    <name>Ansible Lint</name>
     <description>Ansible lint plugin for SonarQube</description>
 
     <properties>
@@ -57,7 +57,7 @@
                 <version>1.17</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <sonarQubeMinVersion>6.7</sonarQubeMinVersion>
+                    <sonarQubeMinVersion>${sonar.apiVersion}</sonarQubeMinVersion>
                 </configuration>
             </plugin>
         </plugins>

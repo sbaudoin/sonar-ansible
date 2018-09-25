@@ -12,7 +12,7 @@
     <packaging>sonar-plugin</packaging>
 
     <!-- Give a suitable name and description to your rules/plugin -->
-    <name>SonarQube Ansible Extras Plugin</name>
+    <name>Extras Ansible Lint Rules</name>
     <description>Extra rules for the Ansible lint plugin for SonarQube</description>
 
     <licenses>
