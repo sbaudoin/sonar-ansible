@@ -69,10 +69,11 @@ public class FileSystemTest {
     @Test
     public void testReadDirectory() throws URISyntaxException, IOException {
         FileSystem fs = new FileSystem(new URI("file:///"));
-        List<Path> content = fs.readDirectory(Paths.get("src", "test", "resources", "my-rules").toUri()).collect(Collectors.toList());
+        Path root = Paths.get("src", "test", "resources", "my-rules");
+        List<Path> content = fs.readDirectory(root.toUri()).collect(Collectors.toList());
         assertEquals(3, content.size());
-        assertEquals("rule1.html", content.get(0).getFileName().toString());
-        assertEquals("rule1.json", content.get(1).getFileName().toString());
-        assertEquals("rule2.json", content.get(2).getFileName().toString());
+        assertTrue(content.contains(root.resolve("rule1.html").toAbsolutePath()));
+        assertTrue(content.contains(root.resolve("rule1.json").toAbsolutePath()));
+        assertTrue(content.contains(root.resolve("rule2.json").toAbsolutePath()));
     }
 }
