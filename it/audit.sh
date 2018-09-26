@@ -31,7 +31,7 @@ fi
 echo "Checking result"
 apt-get update
 apt-get install -y python-pip
-pip install requests
+pip install requests requests[security]
 python << EOF
 import requests
 import sys
