@@ -26,7 +26,7 @@ sudo pip install lxml
 YAML_PLUGIN_VERSION=$(python -c "
 from lxml import etree
 
-pom = etree.parse('/mnt/pom.xml')
+pom = etree.parse('pom.xml')
 print pom.xpath('/a:project/a:dependencyManagement//a:dependency[a:artifactId=\'sonar-yaml-plugin\']/a:version', namespaces={'a': 'http://maven.apache.org/POM/4.0.0'})[0].text
 ")
 wget -O /tmp/sonar-yaml-plugin-$YAML_PLUGIN_VERSION.jar https://oss.sonatype.org/content/groups/public/com/github/sbaudoin/sonar-yaml-plugin/$YAML_PLUGIN_VERSION/sonar-yaml-plugin-$YAML_PLUGIN_VERSION.jar
