@@ -64,7 +64,7 @@ for measure in data['component']['measures']:
         comment_lines = True
     if measure['metric'] == 'violations' and measure['value'] == '27':
         print 'violations metrics OK'
-        comment_lines = True
+        violations = True
 
 r = requests.get('http://sonarqube:9000/api/issues/search?componentKeys=my:project:src/roles/bobbins/tasks/main.yml&statuses=OPEN', auth=('admin', 'admin'))
 if r.status_code != 200:
@@ -79,5 +79,5 @@ if data['issues'][0]['message'] == 'Git checkouts must contain explicit version'
     print 'issues metrics OK'
     issues = True
 
-sys.exit(0 if lines and ncloc and files and directories and comment_lines and issues else 1)
+sys.exit(0 if lines and ncloc and files and directories and comment_lines and violations and issues else 1)
 EOF
