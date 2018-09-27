@@ -1,4 +1,3 @@
 FROM openjdk:8
-RUN apt-get update && apt-get install -y python-pip && pip install ansible-lint lxml
 COPY it /usr/src/myapp/it
 WORKDIR /usr/src/myapp/it

@@ -22,14 +22,15 @@ CONTAINER_NAME=it_sonarqube_1
 # Wait for SonarQube to be up
 grep -q "SonarQube is up" <(docker logs --follow --tail 0 $CONTAINER_NAME)
 # Copy the plugins
-sudo pip install lxml
+echo "Installing the plugins..."
+sudo pip install -q lxml
 YAML_PLUGIN_VERSION=$(python -c "
 from lxml import etree
 
 pom = etree.parse('pom.xml')
 print pom.xpath('/a:project/a:dependencyManagement//a:dependency[a:artifactId=\'sonar-yaml-plugin\']/a:version', namespaces={'a': 'http://maven.apache.org/POM/4.0.0'})[0].text
 ")
-wget -O /tmp/sonar-yaml-plugin-$YAML_PLUGIN_VERSION.jar https://oss.sonatype.org/content/groups/public/com/github/sbaudoin/sonar-yaml-plugin/$YAML_PLUGIN_VERSION/sonar-yaml-plugin-$YAML_PLUGIN_VERSION.jar
+wget -q -O /tmp/sonar-yaml-plugin-$YAML_PLUGIN_VERSION.jar https://oss.sonatype.org/content/groups/public/com/github/sbaudoin/sonar-yaml-plugin/$YAML_PLUGIN_VERSION/sonar-yaml-plugin-$YAML_PLUGIN_VERSION.jar
 docker cp /tmp/sonar-yaml-plugin-$YAML_PLUGIN_VERSION.jar $CONTAINER_NAME:/opt/sonarqube/extensions/plugins
 docker cp $SCRIPT_DIR/../sonar-ansible-plugin/target/sonar-ansible-plugin-*.jar $CONTAINER_NAME:/opt/sonarqube/extensions/plugins
 # Restart SonarQube

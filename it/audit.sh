@@ -1,14 +1,20 @@
 #!/bin/bash -e
 
+# Install requirements
+echo "Installing requirements..."
+apt-get -qq update
+apt-get -qq install -y python-pip > /dev/null
+pip install -q ansible-lint requests requests[security]
+
 # Create quality profile to enable Ansible rules
-echo "Enabling Ansible rules"
+echo "Enabling Ansible rules..."
 curl -s -o /dev/null -w "%{http_code}\n" -u admin:admin -X POST 'http://sonarqube:9000/api/qualityprofiles/create?name=Ansible&language=yaml' | grep -q 200
 curl -s -o /dev/null -w "%{http_code}\n" -u admin:admin -X POST 'http://sonarqube:9000/api/qualityprofiles/set_default?qualityProfile=Ansible&language=yaml' | grep -q 204
 PROFILE_KEY=`curl -s -u admin:admin 'http://sonarqube:9000/api/qualityprofiles/search?qualityProfile=Ansible&language=yaml' | sed 's/.*"key":"\([^"]*\)".*/\1/'`
 curl -s -o /dev/null -w "%{http_code}\n" -u admin:admin -X POST 'http://sonarqube:9000/api/qualityprofiles/activate_rules?targetKey='$PROFILE_KEY'&tags=ansible' | grep -q 200
 
 # Install sonar-runner
-echo "Installing Sonar scanner"
+echo "Installing Sonar scanner..."
 cd /tmp
 wget -q https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SCANNER_VERSION-linux.zip
 unzip -q sonar-scanner-cli-$SCANNER_VERSION-linux.zip
@@ -18,7 +24,7 @@ export PATH=/tmp/sonar-scanner-$SCANNER_VERSION-linux/bin:$PATH
 echo "sonar.host.url=http://sonarqube:9000" > /tmp/sonar-scanner-$SCANNER_VERSION-linux/conf/sonar-scanner.properties
 
 # Audit code
-echo "Launching scanner"
+echo "Launching scanner..."
 cd /usr/src/myapp/it
 sonar-scanner
 if [ $? -ne 0 ]
@@ -27,11 +33,11 @@ then
     exit 1
 fi
 
+# Sleep a little because SonarQube needs some time to ingest the audit results
+sleep 10
+
 # Check audit result
-echo "Checking result"
-apt-get update
-apt-get install -y python-pip
-pip install requests requests[security]
+echo "Checking result..."
 python << EOF
 from __future__ import print_function
 import requests
