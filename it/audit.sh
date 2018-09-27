@@ -33,6 +33,7 @@ apt-get update
 apt-get install -y python-pip
 pip install requests requests[security]
 python << EOF
+from __future__ import print_function
 import requests
 import sys
 
@@ -43,40 +44,43 @@ if r.status_code != 200:
 data = r.json()
 
 if 'component' not in data or 'measures' not in data['component']:
+    print('Invalid server response: wrong JSON', file=sys.stderr)
     sys.exit(1)
 
-lines = ncloc = files = directories = comment_lines = False
+lines = ncloc = files = directories = comment_lines = violations = False
 for measure in data['component']['measures']:
     if measure['metric'] == 'lines' and measure['value'] == '127':
-        print 'lines metrics OK'
+        print('lines metrics OK')
         lines = True
     if measure['metric'] == 'ncloc' and measure['value'] == '87':
-        print 'ncloc metrics OK'
+        print('ncloc metrics OK')
         ncloc = True
     if measure['metric'] == 'files' and measure['value'] == '12':
-        print 'files metrics OK'
+        print('files metrics OK')
         files = True
     if measure['metric'] == 'directories' and measure['value'] == '7':
-        print 'directories metrics OK'
+        print('directories metrics OK')
         directories = True
     if measure['metric'] == 'comment_lines' and measure['value'] == '1':
-        print 'comment_lines metrics OK'
+        print('comment_lines metrics OK')
         comment_lines = True
     if measure['metric'] == 'violations' and measure['value'] == '27':
-        print 'violations metrics OK'
+        print('violations metrics OK')
         violations = True
 
 r = requests.get('http://sonarqube:9000/api/issues/search?componentKeys=my:project:src/roles/bobbins/tasks/main.yml&statuses=OPEN', auth=('admin', 'admin'))
 if r.status_code != 200:
+    print('Invalid server response: ' + str(r.status_code), file=sys.stderr)
     sys.exit(1)
 
 data = r.json()
 
 if data['total'] != 1:
+    print('Wrong total number of issues: ' + str(data['total']), file=sys.stderr)
     sys.exit(1)
 issues = False
 if data['issues'][0]['message'] == 'Git checkouts must contain explicit version' and data['issues'][0]['line'] == 2:
-    print 'issues metrics OK'
+    print('issues metrics OK')
     issues = True
 
 sys.exit(0 if lines and ncloc and files and directories and comment_lines and violations and issues else 1)
