@@ -36,7 +36,7 @@ deploy:
       secure: "RWPrzo7ysRA53mm7iOz6M2I8K40gjR6YZi0HnmVnL2ot2/qdAGc9xPpJZvFUNTyvnGzk6GHY8fYlyFapPFWqK3byLCY4xSpsd8cxtzhCxLtnOulM/OKoHmWFI/0bcvmbujHxyuIm/wSxQhxgY/mlX1OkiqUKUR8m5/hbR3JiLTdaPcKVczXT5q0JiGZ6qGCkjHMvzo2Uy2RT1HcIsMW0OlUM5O7gHnJOQ9AoAXzsez3eF5K/Qu6zxY4UDKg7qQB/KgotZS381iqqG2ABAubiX241z594l6iSG2yWGnV6o/FyKItaCMtBRmfaUx57JX3CfLiNtYsxnbqpMkGC3D2acgKHTUQBBxw9wQXr48N5Y08+bE7KvJ//iTeAvwWxdKP3rx9fQGFJkd7lQNqV0O/yAgNkmIlRSqD5Fcxx4uWjoUm+tPco746ln0bLhrHtI+Xu0a6SWIsiXAYPr3OmmmWL1bEvA+P0m6DwV+FZCd+hfBUSMXPGrI3xS2TFPzDiIftgVkChB1SDaXBs+Wwfzhth6Kebhxus/X7VozqsnjkogfoOSVZ7lpp7W2JFWXNIMfiVgnMQirlnVa0ZYHtCTAgT5Xu5SaoC5kIcswTRjqy40csFpRhd/LC2767rv5a0n7H7U1m9BX/7bnl8bILPBA5rG7467X0VaTQbNZeuF7uEbEM="
     file_glob: true
     file:
-      - target/sonar-ansible-plugin-*.jar
+      - sonar-ansible-plugin/target/sonar-ansible-plugin-*.jar
     skip_cleanup: true
     on:
       repo: sbaudoin/sonar-ansible
