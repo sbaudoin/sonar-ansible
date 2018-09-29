@@ -36,20 +36,22 @@ There are two ways to add lint rules and create the plugin: the regular one and 
 2. Create 2 descriptor files for your rule as follows:
     1. Create a file `ruleID.json` as follows and customize:
 
-            {
-              "title": "Short title",
-              "type": "CODE_SMELL",
-              "status": "ready",
-              "remediation": {
-                "func": "Constant\/Issue",
-              "constantCost": "2min"
-              },
-              "tags": [
-                "ansible",
-              "another_tag"
-              ],
-              "defaultSeverity": "Blocker"
-            }
+        ```json
+        {
+          "title": "Short title",
+          "type": "CODE_SMELL",
+          "status": "ready",
+          "remediation": {
+            "func": "Constant\/Issue",
+          "constantCost": "2min"
+          },
+          "tags": [
+            "ansible",
+          "another_tag"
+          ],
+          "defaultSeverity": "Blocker"
+        }
+         ```
 
         The parameters are the following:
 
@@ -109,12 +111,14 @@ On SonarQube, you must have the [YAML SonarQube plugin](https://github.com/sbaud
 
 3. Create the plugin class: in the `src/main/java/...` directory, create a class file (with camelcase: `MyClass.java`) with the following content:
 
-            package com.mycompany;
+    ```java
+    package com.mycompany;
 
-            import org.sonar.plugins.ansible.extras.AbstractAnsibleExtrasPlugin;
+    import org.sonar.plugins.ansible.extras.AbstractAnsibleExtrasPlugin;
 
-            public class MyClass extends AbstractAnsibleExtrasPlugin {
-            }
+    public class MyClass extends AbstractAnsibleExtrasPlugin {
+    }
+     ```
 
 4. Put your Python rule in the directory `src/resources/extra-rules` and descriptor files in the directory `src/resources/org/sonar/l10n/ansible/rules/ansible-extras`
 5. Compile the plugin:

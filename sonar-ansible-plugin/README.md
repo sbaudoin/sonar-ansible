@@ -25,7 +25,7 @@ SonarQube Plugin for Ansible
 
 Main SonarQube plugin for auditing Ansible playbooks.
 
-Please refer to [the main page](..) for the detailed documentation.
+Please refer to [the main page](https://github.com/sbaudoin/sonar-ansible) for the detailed documentation.
 
 ## License
 
