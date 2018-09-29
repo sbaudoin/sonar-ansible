@@ -1,5 +1,27 @@
+<!---
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
 Ansible Lint Extension Plugin
 =============================
+
+[![Apache License, Version 2.0, January 2004](https://img.shields.io/github/license/apache/maven.svg?label=License)](http://www.apache.org/licenses/LICENSE-2.0)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.sbaudoin/sonar-ansible-extras-plugin.svg?label=Maven%20Central)](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.sbaudoin%22%20AND%20a%3A%22sonar-ansible-extras-plugin%22)
+[![Build Status](https://travis-ci.org/sbaudoin/sonar-ansible.svg?branch=master)](https://travis-ci.org/sbaudoin/sonar-ansible)
+[![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=com.github.sbaudoin:sonar-ansible&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.github.sbaudoin:sonar-ansible)
+[![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=com.github.sbaudoin:sonar-ansible&metric=coverage)](https://sonarcloud.io/dashboard?id=com.github.sbaudoin:sonar-ansible)
 
 The SonarQube plugin for Ansible was designed to easily add custom ansible-lint rules for non-Java developers. The intention is to allow Python developers to have their rules be added to SonarQube as easy as possible.
 
@@ -7,7 +29,7 @@ Due to technical constraints the chosen extension mechanism is based on a SonarQ
 
 There are two ways to add lint rules and create the plugin: the regular one and the hacker's one. Choose the one you prefer (if you are not comfortable with Java, choose the hacker's way) but be aware that some restrictions apply to the hacker's way. In both cases there are some mandatory steps (writing your ansible-lint rule and some desriptor files) so let's start from that first.
 
-**Be aware that we cannot be taken responsible for problems you might encounter with the custom rules you had to this plugin.**
+**Be aware that we cannot be taken responsible for problems you might encounter with the custom rules you add to this plugin.**
 
 ## Common steps
 1. Write your custom Python Ansible Lint rule. During so you have decided for an ID for your rule. Let's say this ID is `ruleID`. It will be used right hereafter to name some files.

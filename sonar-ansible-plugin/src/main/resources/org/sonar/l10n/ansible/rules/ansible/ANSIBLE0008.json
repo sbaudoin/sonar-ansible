@@ -1,5 +1,5 @@
 {
-  "title": "action sudo is deprecated",
+  "title": "Action sudo is deprecated",
   "type": "CODE_SMELL",
   "status": "ready",
   "remediation": {
