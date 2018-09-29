@@ -49,20 +49,20 @@ Tested on Linux.
 ### Execution
 1. Prior to executing a code audit, you must create a file `sonar-project.properties` that will contain some details about your project (this is a requirement from the Sonar scanner):
 
-        ```INI
-        # must be unique in a given SonarQube instance
-        sonar.projectKey=com.mycompany:my-playbook
-        # this is the name and version displayed in the SonarQube UI. Was mandatory prior to SonarQube 6.1.
-        sonar.projectName=A Name
-        sonar.projectVersion=1.0-SNAPSHOT
-        
-        # Path is relative to the sonar-project.properties file. Replace "\" by "/" on Windows.
-        # This property is optional if sonar.modules is set.
-        sonar.sources=.
-        
-        # Encoding of the source code. Default is default system encoding
-        #sonar.sourceEncoding=UTF-8
-        ```
+    ```INI
+    # must be unique in a given SonarQube instance
+    sonar.projectKey=com.mycompany:my-playbook
+    # this is the name and version displayed in the SonarQube UI. Was mandatory prior to SonarQube 6.1.
+    sonar.projectName=A Name
+    sonar.projectVersion=1.0-SNAPSHOT
+    
+    # Path is relative to the sonar-project.properties file. Replace "\" by "/" on Windows.
+    # This property is optional if sonar.modules is set.
+    sonar.sources=.
+    
+    # Encoding of the source code. Default is default system encoding
+    #sonar.sourceEncoding=UTF-8
+    ```
 
     You just have to do that once. Ideally, add this file along with your playbooks in your preferred SCM.
 2. Run the Sonar scanner from the playbook directory :
