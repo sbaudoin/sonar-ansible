@@ -37,6 +37,7 @@ deploy:
     file_glob: true
     file:
       - sonar-ansible-plugin/target/sonar-ansible-plugin-*.jar
+      - sonar-ansible-extras-plugin/target/sonar-ansible-extras-plugin-*.jar
     skip_cleanup: true
     on:
       repo: sbaudoin/sonar-ansible
