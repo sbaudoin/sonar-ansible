@@ -40,7 +40,7 @@ import java.util.*;
  * {@link #executeCommand(List, List, List)} method in their own {@link #execute(SensorContext)} method. The method
  * {@link #executeCommand(List, List, List)} will automatically deal with the files to be analyzed (the last argument)
  * as well as the formatting options, so child classes should only manage the other command options/arguments.
- * See {@link com.github.sbaudoin.sonar.plugins.ansible.rules.AnsibleSensor} and
+ * See {@code com.github.sbaudoin.sonar.plugins.ansible.rules.AnsibleSensor} and
  * {@link com.github.sbaudoin.sonar.plugins.ansible.extras.rules.AnsibleExtraSensor} for examples.
  *
  * @see <a href="https://github.com/willthames/ansible-lint">https://github.com/willthames/ansible-lint</a>
@@ -151,8 +151,9 @@ public abstract class AbstractAnsibleSensor implements Sensor {
      * @param stdOut where the standard output is written to line by line
      * @param errOut where the error output is written to
      * @return the command exit code
-     * @throws IOException,InterruptedIOException if an error occurred executing the command. See {@link ProcessBuilder#start()}
-     *                                            and {@link Process#waitFor()}
+     * @throws IOException if an error occurred executing the command. See {@link ProcessBuilder#start()} and {@link Process#waitFor()}
+     * @throws InterruptedException if an error occurred executing the command. See {@link ProcessBuilder#start()}
+     *                                and {@link Process#waitFor()}
      * @see ProcessBuilder#start()
      * @see Process#waitFor()
      */
@@ -245,6 +246,10 @@ public abstract class AbstractAnsibleSensor implements Sensor {
      * Saves the found issues in SonarQube
      *
      * @param context the context
+     * @param inputFile the file where the issue was found
+     * @param line the line where the issue was found
+     * @param ruleId the Id of the rule that raised the issue
+     * @param message a message describing the issue
      */
     protected void saveIssue(SensorContext context, InputFile inputFile, int line, String ruleId, String message) {
         RuleKey ruleKey = getRuleKey(context, ruleId);

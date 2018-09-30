@@ -27,6 +27,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * A class used to make the default {@code FileSystem} be closable like the other file systems without raising an exception
+ */
 public final class FileSystem implements Closeable {
     private static final Logger LOGGER = Loggers.get(FileSystem.class);
 
@@ -36,6 +39,8 @@ public final class FileSystem implements Closeable {
 
     /**
      * Initializes a new file system connected to the passed resource
+     *
+     * @param uri the URI to locate the file system
      */
     public FileSystem(URI uri) {
         try {
@@ -65,8 +70,8 @@ public final class FileSystem implements Closeable {
      * with the file system.
      *
      * @param uri an URI to a directory
-     * @return
-     * @throws IOException
+     * @return returns the 1st-level content of the passed directory described as a URI
+     * @throws IOException if an I/O error occurs
      * @throws NotDirectoryException if the file could not otherwise be opened because it is not a directory (optional specific exception)
      * @throws SecurityException In the case the default provider is used, and a security manager is installed, the checkRead
      *                           method is invoked to check read access to the directory.
