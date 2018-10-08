@@ -39,7 +39,7 @@ This plugin leverages the [YAML SonarQube plugin](https://github.com/sbaudoin/so
 Tested on Linux.
 
 ### Installation
-1. Download the [YAML](https://github.com/sbaudoin/sonar-yaml/releases) and [Ansible SonarQube](releases) plugins
+1. Download the [YAML](https://github.com/sbaudoin/sonar-yaml/releases) and [Ansible SonarQube](https://github.com/sbaudoin/sonar-ansible/releases) plugins
 2. Copy them into the `extensions/plugins` directory of SonarQube and restart SonarQube
 3. Log in SonarQube
 4. Create a new quality profile for YAML and enable the Ansible rules (search with the tag "ansible")
