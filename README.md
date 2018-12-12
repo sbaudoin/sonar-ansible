@@ -33,7 +33,7 @@ This plugin leverages the [YAML SonarQube plugin](https://github.com/sbaudoin/so
 ### Requirements
 * SonarQube 6.6 minimum with the [SonarQube plugin for YAML](https://github.com/sbaudoin/sonar-yaml/) (the exact required version is detailed in the [release page of the Ansible plugin](releases)).
 * On the machine that will audit the code:
-    * [ansible-lint](https://github.com/willthames/ansible-lint/) must be installed
+    * [ansible-lint](https://github.com/willthames/ansible-lint/) version 3.4 must be installed (this plugin is currently not compatible with `ansible-lint` 3.5+)
     * [Sonar scanner](https://github.com/SonarSource/sonar-scanner-cli) configured to point to your Sonar server
 
 Tested on Linux.
@@ -99,6 +99,12 @@ The default Ansible Lint rules are available by default (but not activated). So 
 As this plugin extends the YAML plugin, you can also enable and configure any other YAML rule.
 
 Besides, you can easily add your own Ansible Lint rules: see the [sonar-ansible-extras-plugin](sonar-ansible-extras-plugin) documentation.
+
+**WARNING!!!** The codes listed in the table above correspond to ansible-lint 3.4+ codes. In ansible-lint 3.5 the code were changed, causing this plugin no longer to work. Please, use ansible-lint 3.4 with this plugin.
+
+## Known issues
+### Plugin not compatible with `ansible-lint` 3.5+
+This plugin is currently not compatible with `ansible-lint` 3.5+. Please use version 3.4 instead. We are working to quickly fix [this issue](https://github.com/sbaudoin/sonar-ansible/issues/2).
 
 ## License
 
