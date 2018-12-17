@@ -32,7 +32,13 @@ print pom.xpath('/a:project/a:dependencyManagement//a:dependency[a:artifactId=\'
 ")
 wget -q -O /tmp/sonar-yaml-plugin-$YAML_PLUGIN_VERSION.jar https://oss.sonatype.org/content/groups/public/com/github/sbaudoin/sonar-yaml-plugin/$YAML_PLUGIN_VERSION/sonar-yaml-plugin-$YAML_PLUGIN_VERSION.jar
 docker cp /tmp/sonar-yaml-plugin-$YAML_PLUGIN_VERSION.jar $CONTAINER_NAME:/opt/sonarqube/extensions/plugins
-docker cp $SCRIPT_DIR/../sonar-ansible-plugin/target/sonar-ansible-plugin-*.jar $CONTAINER_NAME:/opt/sonarqube/extensions/plugins
+MAVEN_VERSION=$(python -c "
+from lxml import etree
+
+pom = etree.parse('pom.xml')
+print pom.xpath('/a:project/a:version', namespaces={'a': 'http://maven.apache.org/POM/4.0.0'})[0].text
+")
+docker cp $SCRIPT_DIR/../sonar-ansible-plugin/target/sonar-ansible-plugin-$MAVEN_VERSION.jar $CONTAINER_NAME:/opt/sonarqube/extensions/plugins
 # Restart SonarQube
 docker-compose -f $SCRIPT_DIR/docker-compose.yml restart sonarqube
 # Wait for SonarQube to be up
