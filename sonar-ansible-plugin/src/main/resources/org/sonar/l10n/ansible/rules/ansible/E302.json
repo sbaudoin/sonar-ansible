@@ -1,0 +1,15 @@
+{
+  "title": "Using command rather than an argument to e.g. file",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "4min"
+  },
+  "tags": [
+    "ansible",
+    "command-shell",
+    "resources"
+  ],
+  "defaultSeverity": "Blocker"
+}

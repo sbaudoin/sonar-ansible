@@ -1,0 +1,14 @@
+{
+  "title": "Do not use 'local_action', use 'delegate_to: localhost'",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "2min"
+  },
+  "tags": [
+    "ansible",
+    "task"
+  ],
+  "defaultSeverity": "Major"
+}

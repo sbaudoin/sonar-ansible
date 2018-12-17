@@ -1,0 +1,14 @@
+{
+  "title": "meta/main.yml default values should be changed",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "2min"
+  },
+  "tags": [
+    "ansible",
+    "metadata"
+  ],
+  "defaultSeverity": "Critical"
+}

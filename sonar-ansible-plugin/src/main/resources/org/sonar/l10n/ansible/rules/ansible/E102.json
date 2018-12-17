@@ -1,0 +1,14 @@
+{
+  "title": "No Jinja2 in when",
+  "type": "BUG",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "10min"
+  },
+  "tags": [
+    "ansible",
+    "deprecated"
+  ],
+  "defaultSeverity": "Critical"
+}

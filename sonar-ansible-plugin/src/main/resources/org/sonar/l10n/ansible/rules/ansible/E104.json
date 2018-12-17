@@ -1,0 +1,15 @@
+{
+  "title": "Using bare variables is deprecated",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "5min"
+  },
+  "tags": [
+    "ansible",
+    "deprecated",
+    "formatting"
+  ],
+  "defaultSeverity": "Blocker"
+}

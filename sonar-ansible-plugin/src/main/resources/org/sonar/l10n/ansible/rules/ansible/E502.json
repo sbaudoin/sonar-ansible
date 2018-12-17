@@ -1,0 +1,15 @@
+{
+  "title": "All tasks should be named",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "2min"
+  },
+  "tags": [
+    "ansible",
+    "task",
+    "readability"
+  ],
+  "defaultSeverity": "Major"
+}

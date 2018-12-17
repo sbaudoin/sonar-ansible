@@ -33,7 +33,7 @@ This plugin leverages the [YAML SonarQube plugin](https://github.com/sbaudoin/so
 ### Requirements
 * SonarQube 6.6 minimum with the [SonarQube plugin for YAML](https://github.com/sbaudoin/sonar-yaml/) (the exact required version is detailed in the [release page of the Ansible plugin](releases)).
 * On the machine that will audit the code:
-    * [ansible-lint](https://github.com/willthames/ansible-lint/) version 3.4 must be installed (this plugin is currently not compatible with `ansible-lint` 3.5+)
+    * [ansible-lint](https://github.com/ansible/ansible-lint/) version 3.4+ must be installed
     * [Sonar scanner](https://github.com/SonarSource/sonar-scanner-cli) configured to point to your Sonar server
 
 Tested on Linux.
@@ -73,38 +73,82 @@ Tested on Linux.
 
 Subsequent scans will just required the last step to be executed. It can easily be integrated into a continuous integration pipeline.
 
+## Severity levels mapping
+As of version 3.5, Ansible Lint defines severities. Here is the mapping with SonarQube's severity levels:
+
+| Ansible Lint Level | SonarQube Level |
+|--------------------|-----------------|
+| `INFO`             | Info            |
+| `VERY_LOW`         | Info            |
+| `LOW`              | Minor           |
+| `MEDIUM`           | Major           |
+| `HIGH`             | Critical        |
+| `VERY_HIGH`        | Blocker         |
+
 ## Standard and extended rules
 The default Ansible Lint rules are available by default (but not activated). So far:
 
-| Code        | Description                                              |
-|-------------|----------------------------------------------------------|
-| ANSIBLE0002 | Trailing whitespace                                      |
-| ANSIBLE0004 | Git checkouts must contain explicit version              |
-| ANSIBLE0005 | Mercurial checkouts must contain explicit revision       |
-| ANSIBLE0006 | Using command rather than module                         |
-| ANSIBLE0007 | Using command rather than an argument to e.g. file       |
-| ANSIBLE0008 | action sudo is deprecated                                |
-| ANSIBLE0009 | Octal file permissions must contain leading zero         |
-| ANSIBLE0010 | Package installs should not use latest                   |
-| ANSIBLE0011 | All tasks should be named                                |
-| ANSIBLE0012 | Commands should not change things if nothing needs doing |
-| ANSIBLE0013 | Use shell only when shell functionality is required      |
-| ANSIBLE0014 | Environment variables don't work as part of command      |
-| ANSIBLE0015 | Using bare variables is deprecated                       |
-| ANSIBLE0016 | Tasks that run when changed should likely be handlers    |
-| ANSIBLE0017 | become_user requires become to work as expected          |
-| ANSIBLE0018 | always_run is deprecated                                 |
-| ANSIBLE0019 | No Jinja2 in when                                        |
+| Code          | Description                                                     |
+|---------------|-----------------------------------------------------------------|
+| `ANSIBLE0002` | Trailing whitespace                                             |
+| `ANSIBLE0004` | Git checkouts must contain explicit version                     |
+| `ANSIBLE0005` | Mercurial checkouts must contain explicit revision              |
+| `ANSIBLE0006` | Using command rather than module                                |
+| `ANSIBLE0007` | Using command rather than an argument to e.g. file              |
+| `ANSIBLE0008` | action sudo is deprecated                                       |
+| `ANSIBLE0009` | Octal file permissions must contain leading zero                |
+| `ANSIBLE0010` | Package installs should not use latest                          |
+| `ANSIBLE0011` | All tasks should be named                                       |
+| `ANSIBLE0012` | Commands should not change things if nothing needs doing        |
+| `ANSIBLE0013` | Use shell only when shell functionality is required             |
+| `ANSIBLE0014` | Environment variables don't work as part of command             |
+| `ANSIBLE0015` | Using bare variables is deprecated                              |
+| `ANSIBLE0016` | Tasks that run when changed should likely be handlers           |
+| `ANSIBLE0017` | become_user requires become to work as expected                 |
+| `ANSIBLE0018` | always_run is deprecated                                        |
+| `ANSIBLE0019` | No Jinja2 in when                                               |
+| `E101`        | Deprecated always_run                                           |
+| `E102`        | No Jinja2 in when                                               |
+| `E103`        | Deprecated sudo                                                 |
+| `E104`        | Using bare variables is deprecated                              |
+| `E105`        | Deprecated module                                               |
+| `E201`        | Trailing whitespace                                             |
+| `E202`        | Octal file permissions must contain leading zero                |
+| `E203`        | Most files should not contain tabs                              |
+| `E204`        | Lines should be no longer than 120 chars                        |
+| `E205`        | Use ”.yml” or ”.yaml” playbook extension                        |
+| `E206`        | Variables should have spaces before and after: `{{ var_name }}` |
+| `E301`        | Commands should not change things if nothing needs doing        |
+| `E302`        | Using command rather than an argument to e.g. file              |
+| `E303`        | Using command rather than module                                |
+| `E304`        | Environment variables don’t work as part of command             |
+| `E305`        | Use shell only when shell functionality is required             |
+| `E401`        | Git checkouts must contain explicit version                     |
+| `E402`        | Mercurial checkouts must contain explicit revision              |
+| `E403`        | Package installs should not use latest                          |
+| `E404`        | Doesn’t need a relative path in role                            |
+| `E405`        | Remote package tasks should have a retry                        |
+| `E501`        | become_user requires become to work as expected                 |
+| `E502`        | All tasks should be named                                       |
+| `E503`        | Tasks that run when changed should likely be handlers           |
+| `E504`        | Do not use `local_action`, use `delegate_to: localhost`         |
+| `E601`        | Don’t compare to literal True/False                             |
+| `E602`        | Don’t compare to empty string                                   |
+| `E701`        | `meta/main.yml` should contain relevant info                    |
+| `E702`        | Tags must contain lowercase letters and digits only             |
+| `E703`        | `meta/main.yml` default values should be changed                |
+| `E704`        | `meta/main.yml` video_links should be formatted correctly       |
+
+The `Exxx` rules are only available as of version 2.0.0 of this plugin and with `ansible-lint` version 3.5+.
+See [the Ansible documentation](https://docs.ansible.com/ansible-lint/rules/default_rules.html).
 
 As this plugin extends the YAML plugin, you can also enable and configure any other YAML rule.
 
 Besides, you can easily add your own Ansible Lint rules: see the [sonar-ansible-extras-plugin](sonar-ansible-extras-plugin) documentation.
 
-**WARNING!!!** The codes listed in the table above correspond to ansible-lint 3.4+ codes. In ansible-lint 3.5 the code were changed, causing this plugin no longer to work. Please, use ansible-lint 3.4 with this plugin.
-
 ## Known issues
-### Plugin not compatible with `ansible-lint` 3.5+
-This plugin is currently not compatible with `ansible-lint` 3.5+. Please use version 3.4 instead. We are working to quickly fix [this issue](https://github.com/sbaudoin/sonar-ansible/issues/2).
+### Plugin version 1.x.x not compatible with `ansible-lint` 3.5+
+The version 1 of this plugin is not compatible with `ansible-lint` 3.5+. Please use `ansible-lint` version 3.4 with this first release of the plugin.
 
 ## License
 

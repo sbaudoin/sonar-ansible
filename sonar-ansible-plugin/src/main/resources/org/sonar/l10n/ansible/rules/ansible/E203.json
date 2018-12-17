@@ -1,0 +1,14 @@
+{
+  "title": "Most files should not contain tabs",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "10min"
+  },
+  "tags": [
+    "ansible",
+    "formatting"
+  ],
+  "defaultSeverity": "Info"
+}

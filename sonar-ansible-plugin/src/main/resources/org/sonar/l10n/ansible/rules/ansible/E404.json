@@ -1,0 +1,14 @@
+{
+  "title": "Doesn't need a relative path in role",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "2min"
+  },
+  "tags": [
+    "ansible",
+    "module"
+  ],
+  "defaultSeverity": "Critical"
+}

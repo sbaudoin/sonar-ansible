@@ -40,9 +40,6 @@ import org.sonar.api.utils.log.LoggerLevel;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.attribute.PosixFilePermission;
 import java.util.*;
 
 import static com.github.sbaudoin.sonar.plugins.ansible.Utils.issueExists;
@@ -53,10 +50,12 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 public class AbstractAnsibleSensorTest {
-    private static final String RULE_ID1 = "AnyCheck1";
-    private static final String RULE_ID2 = "AnyCheck2";
+    private static final String RULE_ID1 = "ANSIBLE1";
+    private static final String RULE_ID2 = "EAnyCheck1";
+    private static final String RULE_ID3 = "EAnyCheck2";
     private final RuleKey ruleKey1 = RuleKey.of(AnsibleCheckRepository.REPOSITORY_KEY, RULE_ID1);
     private final RuleKey ruleKey2 = RuleKey.of(AnsibleCheckRepository.REPOSITORY_KEY, RULE_ID2);
+    private final RuleKey ruleKey3 = RuleKey.of(AnsibleCheckRepository.REPOSITORY_KEY, RULE_ID3);
     private MySensor sensor;
     private SensorContextTester context;
 
@@ -136,10 +135,11 @@ public class AbstractAnsibleSensorTest {
         assertTrue(sensor.scannedFiles.contains(playbook3));
 
         Collection<Issue> issues = context.allIssues();
-        assertEquals(3, issues.size());
-        assertTrue(issueExists(issues, ruleKey1, playbook1, 3, "An error -p"));
-        assertTrue(issueExists(issues, ruleKey2, playbook1, 5, "Another error foo"));
-        assertTrue(issueExists(issues, ruleKey2, playbook2, 3, "Another error bar"));
+        assertEquals(4, issues.size());
+        assertTrue(issueExists(issues, ruleKey1, playbook1, 2, "A first error"));
+        assertTrue(issueExists(issues, ruleKey2, playbook1, 3, "An error -p"));
+        assertTrue(issueExists(issues, ruleKey3, playbook1, 5, "Another error foo"));
+        assertTrue(issueExists(issues, ruleKey3, playbook2, 3, "Another error bar"));
     }
 
     @Test
@@ -234,9 +234,9 @@ public class AbstractAnsibleSensorTest {
 
         Collection<Issue> issues = context.allIssues();
         assertEquals(3, issues.size());
-        assertTrue(issueExists(issues, ruleKey1, playbook1, 3, "An error"));
-        assertTrue(issueExists(issues, ruleKey2, playbook1, 5, "Another error"));
-        assertTrue(issueExists(issues, ruleKey2, playbook2, 3, "Another error"));
+        assertTrue(issueExists(issues, ruleKey2, playbook1, 3, "An error"));
+        assertTrue(issueExists(issues, ruleKey3, playbook1, 5, "Another error"));
+        assertTrue(issueExists(issues, ruleKey3, playbook2, 3, "Another error"));
     }
 
     @Test
@@ -251,10 +251,10 @@ public class AbstractAnsibleSensorTest {
 
         // Save issue for a known rule
         logTester.clear();
-        sensor.saveIssue(context, playbook, 2, RULE_ID1, "An error here");
+        sensor.saveIssue(context, playbook, 2, RULE_ID2, "An error here");
         assertEquals(1, context.allIssues().size());
         Issue issue = (Issue)context.allIssues().toArray()[0];
-        assertEquals(ruleKey1, issue.ruleKey());
+        assertEquals(ruleKey2, issue.ruleKey());
         IssueLocation location = issue.primaryLocation();
         assertEquals(playbook.key(), location.inputComponent().key());
         assertEquals(2, location.textRange().start().line());
@@ -264,7 +264,7 @@ public class AbstractAnsibleSensorTest {
     @Test
     public void testGetRuleKey() throws Exception {
         assertNull(sensor.getRuleKey(context, "foo"));
-        assertEquals(RuleKey.of(AnsibleCheckRepository.REPOSITORY_KEY, RULE_ID1), sensor.getRuleKey(context, RULE_ID1));
+        assertEquals(RuleKey.of(AnsibleCheckRepository.REPOSITORY_KEY, RULE_ID2), sensor.getRuleKey(context, RULE_ID2));
     }
 
 
@@ -277,11 +277,13 @@ public class AbstractAnsibleSensorTest {
         context.setFileSystem(fs);
 
         ActiveRules activeRules = new ActiveRulesBuilder()
-                    .create(ruleKey1)
-                    .activate()
-                    .create(ruleKey2)
-                    .activate()
-                    .build();
+                .create(ruleKey1)
+                .activate()
+                .create(ruleKey2)
+                .activate()
+                .create(ruleKey3)
+                .activate()
+                .build();
         context.setActiveRules(activeRules);
 
         FileLinesContextFactory fileLinesContextFactory = mock(FileLinesContextFactory.class);

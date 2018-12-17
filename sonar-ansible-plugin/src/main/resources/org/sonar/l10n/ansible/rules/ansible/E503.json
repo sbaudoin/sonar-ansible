@@ -1,0 +1,15 @@
+{
+  "title": "Tasks that run when changed should likely be handlers",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "30min"
+  },
+  "tags": [
+    "ansible",
+    "task",
+    "behaviour"
+  ],
+  "defaultSeverity": "Major"
+}

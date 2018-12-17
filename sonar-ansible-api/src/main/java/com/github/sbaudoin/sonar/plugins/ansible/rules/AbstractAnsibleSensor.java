@@ -43,7 +43,7 @@ import java.util.*;
  * See {@code com.github.sbaudoin.sonar.plugins.ansible.rules.AnsibleSensor} and
  * {@link com.github.sbaudoin.sonar.plugins.ansible.extras.rules.AnsibleExtraSensor} for examples.
  *
- * @see <a href="https://github.com/willthames/ansible-lint">https://github.com/willthames/ansible-lint</a>
+ * @see <a href="https://github.com/ansible/ansible-lint">https://github.com/ansible/ansible-lint</a>
  */
 public abstract class AbstractAnsibleSensor implements Sensor {
     private static final Logger LOGGER = Loggers.get(AbstractAnsibleSensor.class);
@@ -253,6 +253,11 @@ public abstract class AbstractAnsibleSensor implements Sensor {
      */
     protected void saveIssue(SensorContext context, InputFile inputFile, int line, String ruleId, String message) {
         RuleKey ruleKey = getRuleKey(context, ruleId);
+
+        // Old rules (ansible-lint < 3.5) had id ANSIBLE... but now it is E... so we may need to add the heading E back
+        if (ruleKey == null) {
+            ruleKey = getRuleKey(context, "E" + ruleId);
+        }
 
         if (ruleKey == null) {
             LOGGER.debug("Rule " + ruleId + " ignored, not found in repository");

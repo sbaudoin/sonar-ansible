@@ -56,10 +56,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class AnsibleSensorTest {
-    private static final String RULE_ID1 = "AnyCheck1";
-    private static final String RULE_ID2 = "AnyCheck2";
+    private static final String RULE_ID1 = "ANSIBLE1";
+    private static final String RULE_ID2 = "EAnyCheck1";
+    private static final String RULE_ID3 = "EAnyCheck2";
     private final RuleKey ruleKey1 = RuleKey.of(AnsibleCheckRepository.REPOSITORY_KEY, RULE_ID1);
     private final RuleKey ruleKey2 = RuleKey.of(AnsibleCheckRepository.REPOSITORY_KEY, RULE_ID2);
+    private final RuleKey ruleKey3 = RuleKey.of(AnsibleCheckRepository.REPOSITORY_KEY, RULE_ID3);
     private AnsibleSensor sensor;
     private SensorContextTester context;
 
@@ -114,9 +116,10 @@ public class AnsibleSensorTest {
         assertTrue(sensor.scannedFiles.contains(playbook));
 
         Collection<Issue> issues = context.allIssues();
-        assertEquals(2, issues.size());
-        assertTrue(issueExists(issues, ruleKey1, playbook, 3, "An error -p"));
-        assertTrue(issueExists(issues, ruleKey2, playbook, 5, "Another error --nocolor"));
+        assertEquals(3, issues.size());
+        assertTrue(issueExists(issues, ruleKey1, playbook, 1, "A first error"));
+        assertTrue(issueExists(issues, ruleKey2, playbook, 3, "An error -p"));
+        assertTrue(issueExists(issues, ruleKey3, playbook, 5, "Another error --nocolor"));
     }
 
     private boolean issueExists(Collection<Issue> issues, RuleKey ruleKey, InputFile file, int line, String regex) {
@@ -147,6 +150,8 @@ public class AnsibleSensorTest {
                 .create(ruleKey1)
                 .activate()
                 .create(ruleKey2)
+                .activate()
+                .create(ruleKey3)
                 .activate()
                 .build();
         context.setActiveRules(activeRules);
