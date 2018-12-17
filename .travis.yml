@@ -19,7 +19,7 @@ before_install:
 install:
   - mvn --settings .travis/settings.xml install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
 script:
-  - mvn clean package sonar:sonar -P audit
+  - mvn clean package sonar:sonar -P audit,build
   - bash it/it.sh 6.6 3.2.0.1227
   - bash it/it.sh 6.7 3.2.0.1227
   - bash it/it.sh 7.0 3.2.0.1227

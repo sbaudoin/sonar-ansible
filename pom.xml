@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.sbaudoin</groupId>
     <artifactId>sonar-ansible</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>SonarQube Ansible</name>
@@ -30,7 +30,6 @@
     <modules>
         <module>sonar-ansible-api</module>
         <module>sonar-ansible-plugin</module>
-        <module>sonar-ansible-extras-plugin</module>
     </modules>
     
     <scm>
@@ -139,6 +138,10 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                </plugin>
+                <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>cobertura-maven-plugin</artifactId>
                     <version>${cobertura-maven-plugin.version}</version>
@@ -175,6 +178,36 @@
                     </includes>
                     <argLine>-javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar=excludes=*,destfile=target/jacoco.exec</argLine>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.4</version>
+                <configuration>
+                    <links>
+                        <link>http://java.sun.com/javase/8/docs/api/</link>
+                    </links>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>com.mycila</groupId>
@@ -267,37 +300,6 @@
                                     <goal>report</goal>
                                 </goals>
                             </execution>
-                            <!--execution>
-                                <id>default-check</id>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                                <configuration>
-                                    <append>true</append>
-                                    <rules>
-                                        <rule implementation="org.jacoco.maven.RuleConfiguration">
-                                            <element>BUNDLE</element>
-                                            <limits>
-                                                <limit implementation="org.jacoco.report.check.Limit">
-                                                    <counter>BRANCH</counter>
-                                                    <value>COVEREDRATIO</value>
-                                                    <minimum>0.80</minimum>
-                                                </limit>
-                                                <limit implementation="org.jacoco.report.check.Limit">
-                                                    <counter>INSTRUCTION</counter>
-                                                    <value>COVEREDRATIO</value>
-                                                    <minimum>0.95</minimum>
-                                                </limit>
-                                                <limit implementation="org.jacoco.report.check.Limit">
-                                                    <counter>CLASS</counter>
-                                                    <value>MISSEDCOUNT</value>
-                                                    <maximum>0</maximum>
-                                                </limit>
-                                            </limits>
-                                        </rule>
-                                    </rules>
-                                </configuration>
-                            </execution-->
                         </executions>
                     </plugin>
                     <plugin>
@@ -307,6 +309,14 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>build</id>
+            <modules>
+                <module>sonar-ansible-api</module>
+                <module>sonar-ansible-plugin</module>
+                <module>sonar-ansible-extras-plugin</module>
+            </modules>
         </profile>
     </profiles>
 </project>
