@@ -149,6 +149,7 @@ Besides, you can easily add your own Ansible Lint rules: see the [sonar-ansible-
 ## Known issues
 ### Plugin version 1.x.x not compatible with `ansible-lint` 3.5+
 The version 1 of this plugin is not compatible with `ansible-lint` 3.5+. Please use `ansible-lint` version 3.4 with this first release of the plugin.
+Be aware that this may also apply to custom rules packaged into the extras plugin.
 
 ## License
 

@@ -28,6 +28,8 @@ Due to technical constraints the chosen extension mechanism is based on a SonarQ
 
 There are two ways to add lint rules and create the plugin: the regular one and the hacker's one. Choose the one you prefer (if you are not comfortable with Java, choose the hacker's way) but be aware that some restrictions apply to the hacker's way. In both cases there are some mandatory steps (writing your ansible-lint rule and some desriptor files) so let's start from that first.
 
+**Users are strongly encouraged to use version 2.0.0 of this plugin in order to be able to use their custom rules with the version 3.5+ of Ansible Lint.**
+
 **Be aware that we cannot be taken responsible for problems you might encounter with the custom rules you add to this plugin.**
 
 ## Common steps
