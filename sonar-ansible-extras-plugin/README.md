@@ -92,7 +92,7 @@ On SonarQube, you must have the [YAML SonarQube plugin](https://github.com/sbaud
     * `sonar.pluginClass`: give there the complete name of your plugin class (see next step below)
 2. Create the directory structure as follows:
 
-        pom.ml         <== the file you jusst edited
+        pom.ml         <== the file you just edited
         src
            /main
                 /java
