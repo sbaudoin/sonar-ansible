@@ -1,3 +1,14 @@
 .idea/
 target/
 *.iml
+/.settings/
+/.project
+/sonar-ansible-api/.project
+/sonar-ansible-api/.classpath
+/sonar-ansible-api/.settings/
+/sonar-ansible-extras-plugin/.project
+/sonar-ansible-extras-plugin/.classpath
+/sonar-ansible-extras-plugin/.settings/
+/sonar-ansible-plugin/.project
+/sonar-ansible-plugin/.classpath
+/sonar-ansible-plugin/.settings/
