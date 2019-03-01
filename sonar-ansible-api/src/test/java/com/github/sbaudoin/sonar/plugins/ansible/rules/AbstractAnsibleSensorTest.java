@@ -141,6 +141,26 @@ public class AbstractAnsibleSensorTest {
         assertTrue(issueExists(issues, ruleKey3, playbook1, 5, "Another error foo"));
         assertTrue(issueExists(issues, ruleKey3, playbook2, 3, "Another error bar"));
     }
+    
+    @Test
+    public void testExecuteWithAnsibleLintNotExist() throws IOException {
+        InputFile playbook1 = Utils.getInputFile("playbooks/playbook1.yml");
+        InputFile playbook2 = Utils.getInputFile("playbooks/playbook2.yml");
+        InputFile playbook3 = Utils.getInputFile("playbooks/playbook3.yml");
+        context.fileSystem().add(playbook1).add(playbook2).add(playbook3);
+
+        context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "ansible-lint-not-exist.sh");
+
+        sensor.executeWithAnsibleLint(context, Arrays.asList("foo", "bar"));
+        assertEquals(0, sensor.scannedFiles.size());
+
+        Collection<Issue> issues = context.allIssues();
+        assertEquals(0, issues.size());
+        assertFalse(issueExists(issues, ruleKey1, playbook1, 2, "A first error"));
+        assertFalse(issueExists(issues, ruleKey2, playbook1, 3, "An error -p"));
+        assertFalse(issueExists(issues, ruleKey3, playbook1, 5, "Another error foo"));
+        assertFalse(issueExists(issues, ruleKey3, playbook2, 3, "Another error bar"));
+    }
 
     @Test
     public void testGetAnsibleLintPath() {

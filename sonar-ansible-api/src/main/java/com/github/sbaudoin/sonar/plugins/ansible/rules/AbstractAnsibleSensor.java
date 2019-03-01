@@ -46,7 +46,7 @@ import java.util.*;
  * @see <a href="https://github.com/ansible/ansible-lint">https://github.com/ansible/ansible-lint</a>
  */
 public abstract class AbstractAnsibleSensor implements Sensor {
-    private static final Logger LOGGER = Loggers.get(AbstractAnsibleSensor.class);
+    private static final Logger LOGGER = Loggers.get(AbstractAnsibleSensor.class); 
 
     /**
      * The underlying file system that will give access to the files to be analyzed
@@ -93,13 +93,26 @@ public abstract class AbstractAnsibleSensor implements Sensor {
     protected void executeWithAnsibleLint(SensorContext context, @Nullable List<String> extraAnsibleLintArgs) {
         LOGGER.debug("Ansible sensor executed with context: " + context);
 
+        // Cancel analyse if ansible-lint doesn't exist
+        final String ansibleLintPath = getAnsibleLintPath(context);
+        try {
+            executeCommand(Arrays.asList(ansibleLintPath, "--version"), new ArrayList<>(), new ArrayList<>(), false);
+        }catch (IOException e) {
+            LOGGER.warn("Ansible Lint analysis disabled, path doesn't exist: {}", ansibleLintPath);
+            return;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return;
+        }
+        
+        
         for (InputFile inputFile : fileSystem.inputFiles(mainFilesPredicate)) {
             LOGGER.debug("Analyzing file: " + inputFile.filename());
             scannedFiles.add(inputFile);
 
             // Build ansible-lint command
             List<String> command = new ArrayList<>();
-            command.addAll(Arrays.asList(getAnsibleLintPath(context), "-p", "--nocolor"));
+            command.addAll(Arrays.asList(ansibleLintPath, "-p", "--nocolor"));
             if (extraAnsibleLintArgs != null) {
                 command.addAll(extraAnsibleLintArgs);
             }
@@ -158,6 +171,25 @@ public abstract class AbstractAnsibleSensor implements Sensor {
      * @see Process#waitFor()
      */
     protected int executeCommand(List<String> command, List<String> stdOut, List<String> errOut) throws InterruptedException, IOException {
+        return executeCommand(command, stdOut, errOut, true);
+    }
+    
+    /**
+     * Executes a system command and writes the standard and error outputs to the passed
+     * <code>StringBuilder</code> if not <code>null</code>
+     *
+     * @param command the command to be executed
+     * @param stdOut where the standard output is written to line by line
+     * @param errOut where the error output is written to
+     * @param logError Log error if any
+     * @return the command exit code
+     * @throws IOException if an error occurred executing the command. See {@link ProcessBuilder#start()} and {@link Process#waitFor()}
+     * @throws InterruptedException if an error occurred executing the command. See {@link ProcessBuilder#start()}
+     *                                and {@link Process#waitFor()}
+     * @see ProcessBuilder#start()
+     * @see Process#waitFor()
+     */
+    protected int executeCommand(List<String> command, List<String> stdOut, List<String> errOut, boolean logError) throws InterruptedException, IOException {
         assert stdOut != null;
         assert errOut != null;
 
@@ -192,7 +224,9 @@ public abstract class AbstractAnsibleSensor implements Sensor {
 
             return status;
         } catch (InterruptedException|IOException e) {
-            LOGGER.error("Error executing command", e);
+            if (logError) {
+                LOGGER.error("Error executing command", e);
+            }
             throw e;
         }
     }
