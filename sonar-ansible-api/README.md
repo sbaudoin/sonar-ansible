@@ -30,6 +30,6 @@ For usage examples, please refer to [Ansible plugin](../sonar-ansible-plugin) or
 
 ## License
 
-Copyright 2018 Sylvain BAUDOIN
+Copyright 2018-2019 Sylvain BAUDOIN
 
 Licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
