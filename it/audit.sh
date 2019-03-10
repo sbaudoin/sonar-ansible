@@ -64,9 +64,6 @@ for measure in data['component']['measures']:
     if measure['metric'] == 'files' and measure['value'] == '12':
         print('files metrics OK')
         files = True
-    if measure['metric'] == 'directories' and measure['value'] == '7':
-        print('directories metrics OK')
-        directories = True
     if measure['metric'] == 'comment_lines' and measure['value'] == '1':
         print('comment_lines metrics OK')
         comment_lines = True
@@ -89,5 +86,5 @@ if data['issues'][0]['message'] == 'Git checkouts must contain explicit version'
     print('issues metrics OK')
     issues = True
 
-sys.exit(0 if lines and ncloc and files and directories and comment_lines and violations and issues else 1)
+sys.exit(0 if lines and ncloc and files and comment_lines and violations and issues else 1)
 EOF
