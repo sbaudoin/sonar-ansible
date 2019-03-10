@@ -70,7 +70,7 @@ for measure in data['component']['measures']:
     if measure['metric'] == 'comment_lines' and measure['value'] == '1':
         print('comment_lines metrics OK')
         comment_lines = True
-    if measure['metric'] == 'violations' and measure['value'] == '27':
+    if measure['metric'] == 'violations' and measure['value'] == '31':
         print('violations metrics OK')
         violations = True
 
