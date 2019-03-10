@@ -29,7 +29,7 @@ public class AnsibleRulesDefinitionTest extends TestCase {
 
         assertEquals(AnsibleCheckRepository.REPOSITORY_NAME, repository.name());
         assertEquals(YamlLanguage.KEY, repository.language());
-        assertEquals(17 + 31, repository.rules().size());
+        assertEquals(17 + 32, repository.rules().size());
 
         RulesDefinition.Rule aRule = repository.rule("ANSIBLE0004");
         assertNotNull(aRule);

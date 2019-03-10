@@ -1,0 +1,3 @@
+<p>Without the <code>pipefail</code> option set, a shell command that implements a pipeline can fail and still return 0.
+    If any part of the pipeline other than the terminal command fails, the whole pipeline will still return 0, which may
+    be considered a success by Ansible. <code>pipefail</code> is available in the Bash shell.</p>
