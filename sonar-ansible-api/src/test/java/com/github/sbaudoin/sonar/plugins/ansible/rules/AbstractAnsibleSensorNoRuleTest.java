@@ -1,7 +1,12 @@
 package com.github.sbaudoin.sonar.plugins.ansible.rules;
 
-import com.github.sbaudoin.sonar.plugins.ansible.Utils;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
+
+import java.io.IOException;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -16,12 +21,7 @@ import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.api.utils.log.LogTester;
 import org.sonar.api.utils.log.LoggerLevel;
 
-import java.io.IOException;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
+import com.github.sbaudoin.sonar.plugins.ansible.Utils;
 
 public class AbstractAnsibleSensorNoRuleTest {
     @Rule
@@ -29,7 +29,6 @@ public class AbstractAnsibleSensorNoRuleTest {
 
     @Rule
     public LogTester logTester = new LogTester();
-
 
     @Test
     public void testNoActiveRule() throws IOException {
@@ -51,10 +50,9 @@ public class AbstractAnsibleSensorNoRuleTest {
 
         sensor.executeWithAnsibleLint(context, null);
         assertEquals(1, logTester.logs(LoggerLevel.INFO).size());
-        assertEquals("No active rules found for this plugin, skipping.", logTester.logs(LoggerLevel.INFO).get(0));
+        assertEquals("No active rules found for Ansible plugin, skipping.", logTester.logs(LoggerLevel.INFO).get(0));
         assertEquals(0, context.allIssues().size());
     }
-
 
     private class MySensor extends AbstractAnsibleSensor {
         protected MySensor(FileSystem fileSystem) {
