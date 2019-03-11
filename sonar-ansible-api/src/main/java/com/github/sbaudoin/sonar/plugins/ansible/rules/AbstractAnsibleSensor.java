@@ -93,6 +93,12 @@ public abstract class AbstractAnsibleSensor implements Sensor {
     protected void executeWithAnsibleLint(SensorContext context, @Nullable List<String> extraAnsibleLintArgs) {
         LOGGER.debug("Ansible sensor executed with context: " + context);
 
+        // Skip analysis if no rules enabled from this plugin
+        if (context.activeRules().findByRepository(AnsibleCheckRepository.REPOSITORY_KEY).isEmpty()) {
+            LOGGER.info("No active rules found for Ansible plugin, skipping.");
+            return;
+        }
+
         // Cancel analyse if ansible-lint doesn't exist
         final String ansibleLintPath = getAnsibleLintPath(context);
         try {
@@ -104,7 +110,6 @@ public abstract class AbstractAnsibleSensor implements Sensor {
             Thread.currentThread().interrupt();
             return;
         }
-        
         
         for (InputFile inputFile : fileSystem.inputFiles(mainFilesPredicate)) {
             LOGGER.debug("Analyzing file: " + inputFile.filename());

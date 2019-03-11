@@ -123,6 +123,7 @@ The default Ansible Lint rules are available by default (but not activated). So 
 | `E303`        | Using command rather than module                                |
 | `E304`        | Environment variables don’t work as part of command             |
 | `E305`        | Use shell only when shell functionality is required             |
+| `E306`        | Shells that use pipes should set the `pipefail` option          |
 | `E401`        | Git checkouts must contain explicit version                     |
 | `E402`        | Mercurial checkouts must contain explicit revision              |
 | `E403`        | Package installs should not use latest                          |
@@ -153,6 +154,6 @@ Be aware that this may also apply to custom rules packaged into the extras plugi
 
 ## License
 
-Copyright 2018 Sylvain BAUDOIN
+Copyright 2018-2019 Sylvain BAUDOIN
 
 Licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)

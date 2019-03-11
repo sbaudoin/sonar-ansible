@@ -85,11 +85,6 @@ public class AbstractAnsibleRulesDefinitionTest {
         assertTrue(logTester.logs(LoggerLevel.INFO).contains("No Ansible Lint rules found"));
     }
 
-    @Test
-    public void testDefineWithKeyError1() {
-
-    }
-
 
     private class MyRulesDefinition extends AbstractAnsibleRulesDefinition {
         String path;
