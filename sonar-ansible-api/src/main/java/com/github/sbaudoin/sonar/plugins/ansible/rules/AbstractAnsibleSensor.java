@@ -116,8 +116,10 @@ public abstract class AbstractAnsibleSensor implements Sensor {
             List<String> error = new ArrayList<>();
             try {
                 executeCommand(command, output, error);
-            } catch (InterruptedException|IOException e) {
+            } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
+                return;
+            } catch (IOException e) {
                 return;
             }
             if (!error.isEmpty()) {
@@ -198,7 +200,8 @@ public abstract class AbstractAnsibleSensor implements Sensor {
 
             return status;
         } catch (InterruptedException|IOException e) {
-            LOGGER.error("Error executing command", e);
+            LOGGER.error("Error executing command: {}", e.getMessage());
+            LOGGER.debug("Stack trace:", e);
             throw e;
         }
     }
