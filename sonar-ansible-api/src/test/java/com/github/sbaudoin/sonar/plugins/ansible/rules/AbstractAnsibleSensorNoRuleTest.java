@@ -16,7 +16,6 @@
 package com.github.sbaudoin.sonar.plugins.ansible.rules;
 
 import com.github.sbaudoin.sonar.plugins.ansible.Utils;
-import junit.framework.TestCase;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
