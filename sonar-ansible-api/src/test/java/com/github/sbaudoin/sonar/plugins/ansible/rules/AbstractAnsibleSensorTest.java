@@ -18,10 +18,12 @@ package com.github.sbaudoin.sonar.plugins.ansible.rules;
 import com.github.sbaudoin.sonar.plugins.ansible.Utils;
 import com.github.sbaudoin.sonar.plugins.ansible.checks.AnsibleCheckRepository;
 import com.github.sbaudoin.sonar.plugins.ansible.settings.AnsibleSettings;
+import com.github.sbaudoin.sonar.plugins.yaml.checks.YamlSourceCode;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.powermock.api.mockito.PowerMockito;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
@@ -46,8 +48,7 @@ import static com.github.sbaudoin.sonar.plugins.ansible.Utils.issueExists;
 import static com.github.sbaudoin.sonar.plugins.ansible.Utils.setShellRights;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 public class AbstractAnsibleSensorTest {
     private static final String RULE_ID1 = "ANSIBLE1";
@@ -140,6 +141,24 @@ public class AbstractAnsibleSensorTest {
         assertTrue(issueExists(issues, ruleKey2, playbook1, 3, "An error -p"));
         assertTrue(issueExists(issues, ruleKey3, playbook1, 5, "Another error foo"));
         assertTrue(issueExists(issues, ruleKey3, playbook2, 3, "Another error bar"));
+    }
+
+    @Test
+    public void testExecuteWithAnsibleLintIOException() throws IOException, InterruptedException {
+        InputFile playbook1 = Utils.getInputFile("playbooks/playbook1.yml");
+        InputFile playbook2 = Utils.getInputFile("playbooks/playbook2.yml");
+        InputFile playbook3 = Utils.getInputFile("playbooks/playbook3.yml");
+        context.fileSystem().add(playbook1).add(playbook2).add(playbook3);
+
+        MySensor theSensor = spy(sensor);
+        doThrow(new IOException("Boom!")).when(theSensor).executeCommand(any(), any(), any());
+
+        theSensor.executeWithAnsibleLint(context, Arrays.asList("foo", "bar"));
+        assertEquals(1, theSensor.scannedFiles.size());
+        assertTrue(theSensor.scannedFiles.contains(playbook1));
+
+        Collection<Issue> issues = context.allIssues();
+        assertEquals(0, issues.size());
     }
 
     @Test
