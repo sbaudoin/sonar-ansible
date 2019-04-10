@@ -115,7 +115,7 @@ On SonarQube, you must have the [YAML SonarQube plugin](https://github.com/sbaud
     ```java
     package com.mycompany;
 
-    import org.sonar.plugins.ansible.extras.AbstractAnsibleExtrasPlugin;
+    import com.github.sbaudoin.sonar.plugins.ansible.extras.AbstractAnsibleExtrasPlugin;
 
     public class MyClass extends AbstractAnsibleExtrasPlugin {
     }
