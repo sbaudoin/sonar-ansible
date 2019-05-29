@@ -38,6 +38,7 @@ import org.sonar.api.measures.FileLinesContext;
 import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.api.rule.RuleKey;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -78,10 +79,12 @@ public class AnsibleExtraSensorTest {
         context.fileSystem().add(playbook1).add(playbook2).add(playbook3);
 
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src\\test\\resources\\scripts\\ansible-lint4.cmd");
+            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY,
+                    new File(getClass().getResource("/scripts/ansible-lint4.cmd").getFile()).getAbsolutePath());
         } else {
-            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src/test/resources/scripts/ansible-lint4.sh");
-            setShellRights("src/test/resources/scripts/ansible-lint4.sh");
+            String path = new File(getClass().getResource("/scripts/ansible-lint4.sh").getFile()).getAbsolutePath();
+            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, path);
+            setShellRights(path);
         }
 
         DummySensorDescriptor descriptor = new DummySensorDescriptor();
@@ -100,7 +103,7 @@ public class AnsibleExtraSensorTest {
     }
 
     @Test
-    public void testCopyExtraRule() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException {
+    public void testCopyExtraRule() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException, URISyntaxException {
         // Make the method public for test purpose
         Method method = AnsibleExtraSensor.class.getDeclaredMethod("copyExtraRule", Path.class, Path.class);
         method.setAccessible(true);
@@ -108,7 +111,7 @@ public class AnsibleExtraSensorTest {
         Path tempDir = Files.createTempDirectory(EXTRA_RULES_TEMP_DIR);
 
         assertFalse((Boolean)method.invoke(sensor, Paths.get("src/test/resources/extra-rules/extra-rule1.foo"), tempDir));
-        Path file = Paths.get("src/test/resources/extra-rules/extra-rule1.cmd");
+        Path file = Paths.get(getClass().getResource("/extra-rules/extra-rule1.cmd").toURI());
         assertTrue((Boolean)method.invoke(sensor, file, tempDir));
         assertTrue(tempDir.resolve(file.toFile().getName()).toFile().exists());
         assertEquals(Files.readAllLines(file), Files.readAllLines(tempDir.resolve(file.toFile().getName())));
