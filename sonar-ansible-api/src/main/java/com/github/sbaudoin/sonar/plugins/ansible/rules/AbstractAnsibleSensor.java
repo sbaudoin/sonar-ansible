@@ -85,7 +85,8 @@ public abstract class AbstractAnsibleSensor implements Sensor {
 
 
     /**
-     * Executes {@code ansible-lint} with the passed options and saves the issues detected with this tool
+     * Executes {@code ansible-lint} with the passed options and saves the issues detected with this tool.
+     * Also handles the ansible-lint configuration file.
      *
      * @param context the execution sensor context (taken from the method {@link #execute(SensorContext)} of the child class)
      * @param extraAnsibleLintArgs the optional list of command arguments for {@code ansible-lint}. May be {@code null}.
@@ -106,6 +107,10 @@ public abstract class AbstractAnsibleSensor implements Sensor {
             // Build ansible-lint command
             List<String> command = new ArrayList<>();
             command.addAll(Arrays.asList(getAnsibleLintPath(context), "-p", "--nocolor"));
+            String confPath = getAnsibleLintConfPath(context);
+            if (!"".equals(confPath.trim())) {
+                command.addAll(Arrays.asList("-c", confPath));
+            }
             if (extraAnsibleLintArgs != null) {
                 command.addAll(extraAnsibleLintArgs);
             }
@@ -151,6 +156,11 @@ public abstract class AbstractAnsibleSensor implements Sensor {
         return (path.isPresent())?path.get():"ansible-lint";
     }
 
+    protected String getAnsibleLintConfPath(SensorContext context) {
+        Optional<String> path = context.config().get(AnsibleSettings.ANSIBLE_LINT_CONF_PATH_KEY);
+        return (path.isPresent())?path.get():"";
+    }
+
     /**
      * Executes a system command and writes the standard and error outputs to the passed
      * <code>StringBuilder</code> if not <code>null</code>
@@ -173,6 +183,8 @@ public abstract class AbstractAnsibleSensor implements Sensor {
 
         try {
             ProcessBuilder pb = new ProcessBuilder(command);
+            LOGGER.debug("Work directory: {}", fileSystem.baseDir());
+            pb.directory(fileSystem.baseDir());
             Process p = pb.start();
 
             // Read standard output

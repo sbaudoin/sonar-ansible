@@ -97,9 +97,11 @@ public class AnsibleSensorTest {
         context.fileSystem().add(playbook);
 
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src\\test\\resources\\scripts\\ansible-lint.cmd");
+            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY,
+                    new File(getClass().getResource("/scripts/ansible-lint.cmd").getFile()).getAbsolutePath());
         } else {
-            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src/test/resources/scripts/ansible-lint.sh");
+            String path = new File(getClass().getResource("/scripts/ansible-lint.sh").getFile()).getAbsolutePath();
+            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, path);
             Set<PosixFilePermission> perms = new HashSet<>();
             perms.add(PosixFilePermission.OWNER_READ);
             perms.add(PosixFilePermission.OWNER_WRITE);
@@ -108,7 +110,7 @@ public class AnsibleSensorTest {
             perms.add(PosixFilePermission.GROUP_EXECUTE);
             perms.add(PosixFilePermission.OTHERS_READ);
             perms.add(PosixFilePermission.OTHERS_EXECUTE);
-            Files.setPosixFilePermissions(Paths.get("src/test/resources/scripts/ansible-lint.sh"), perms);
+            Files.setPosixFilePermissions(Paths.get(path), perms);
         }
 
         sensor.execute(context);

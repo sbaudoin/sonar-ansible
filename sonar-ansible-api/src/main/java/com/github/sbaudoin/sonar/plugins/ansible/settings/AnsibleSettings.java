@@ -25,6 +25,8 @@ import static java.util.Arrays.asList;
 public class AnsibleSettings {
     public static final String ANSIBLE_LINT_PATH_KEY = "sonar.ansible.ansiblelint.path";
     public static final String ANSIBLE_LINT_PATH_DEFAULT_VALUE = "";
+    public static final String ANSIBLE_LINT_CONF_PATH_KEY = "sonar.ansible.ansiblelint.conf.path";
+    public static final String ANSIBLE_LINT_CONF_PATH_DEFAULT_VALUE = "";
 
 
     private AnsibleSettings() {
@@ -32,12 +34,20 @@ public class AnsibleSettings {
 
 
     public static List<PropertyDefinition> getProperties() {
-        return asList(PropertyDefinition.builder(ANSIBLE_LINT_PATH_KEY)
-                .name("Path to ansible-lint")
-                .description("Path to the ansible-lint executable. Leave it empty if the command is in the system path.")
-                .defaultValue(ANSIBLE_LINT_PATH_DEFAULT_VALUE)
-                .category("Ansible")
-                .onQualifiers(Qualifiers.PROJECT)
-                .build());
+        return asList(
+                PropertyDefinition.builder(ANSIBLE_LINT_PATH_KEY)
+                        .name("Path to ansible-lint")
+                        .description("Path to the ansible-lint executable. Leave it empty if the command is in the system path.")
+                        .defaultValue(ANSIBLE_LINT_PATH_DEFAULT_VALUE)
+                        .category("Ansible")
+                        .onQualifiers(Qualifiers.PROJECT)
+                        .build(),
+                PropertyDefinition.builder(ANSIBLE_LINT_CONF_PATH_KEY)
+                        .name("Path the an ansible-lint configuration file")
+                        .description("Path (absolute or relative to project root) the an ansible-lint configuration file. Leave it empty to use the default .ansible-lint file.")
+                        .defaultValue(ANSIBLE_LINT_CONF_PATH_DEFAULT_VALUE)
+                        .category("Ansible")
+                        .onQualifiers(Qualifiers.PROJECT)
+                        .build());
     }
 }

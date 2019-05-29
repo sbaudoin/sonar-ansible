@@ -76,10 +76,12 @@ public class AbstractAnsibleSensorTest {
         context.fileSystem().add(playbook1).add(playbook2).add(playbook3);
 
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src\\test\\resources\\scripts\\ansible-lint1.cmd");
+            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY,
+                    new File(getClass().getResource("/scripts/ansible-lint1.cmd").getFile()).getAbsolutePath());
         } else {
-            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src/test/resources/scripts/ansible-lint1.sh");
-            setShellRights("src/test/resources/scripts/ansible-lint1.sh");
+            String path = new File(getClass().getResource("/scripts/ansible-lint1.sh").getFile()).getAbsolutePath();
+            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, path);
+            setShellRights(path);
         }
 
         sensor.executeWithAnsibleLint(context, null);
@@ -98,10 +100,12 @@ public class AbstractAnsibleSensorTest {
         context.fileSystem().add(playbook1).add(playbook2).add(playbook3);
 
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src\\test\\resources\\scripts\\ansible-lint2.cmd");
+            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY,
+                    new File(getClass().getResource("/scripts/ansible-lint2.cmd").getFile()).getAbsolutePath());
         } else {
-            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src/test/resources/scripts/ansible-lint2.sh");
-            setShellRights("src/test/resources/scripts/ansible-lint2.sh");
+            String path = new File(getClass().getResource("/scripts/ansible-lint2.sh").getFile()).getAbsolutePath();
+            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, path);
+            setShellRights(path);
         }
 
         sensor.executeWithAnsibleLint(context, null);
@@ -123,10 +127,12 @@ public class AbstractAnsibleSensorTest {
         context.fileSystem().add(playbook1).add(playbook2).add(playbook3);
 
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src\\test\\resources\\scripts\\ansible-lint3.cmd");
+            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY,
+                    new File(getClass().getResource("/scripts/ansible-lint3.cmd").getFile()).getAbsolutePath());
         } else {
-            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, "src/test/resources/scripts/ansible-lint3.sh");
-            setShellRights("src/test/resources/scripts/ansible-lint3.sh");
+            String path = new File(getClass().getResource("/scripts/ansible-lint3.sh").getFile()).getAbsolutePath();
+            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, path);
+            setShellRights(path);
         }
 
         sensor.executeWithAnsibleLint(context, Arrays.asList("foo", "bar"));
@@ -169,6 +175,13 @@ public class AbstractAnsibleSensorTest {
     }
 
     @Test
+    public void testGetAnsibleLintConfPath() {
+        assertEquals("", sensor.getAnsibleLintConfPath(context));
+        context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_CONF_PATH_KEY, "/path/to/ansible-lint.conf");
+        assertEquals("/path/to/ansible-lint.conf", sensor.getAnsibleLintConfPath(context));
+    }
+
+    @Test
     public void testExecuteCommand() {
         ArrayList<String> stdOut = new ArrayList();
         ArrayList<String> stdErr = new ArrayList();
@@ -185,10 +198,11 @@ public class AbstractAnsibleSensorTest {
             stdErr.clear();
             ArrayList<String> command = new ArrayList<>();
             if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-                command.add("src\\test\\resources\\scripts\\echo.cmd");
+                command.add(new File(getClass().getResource("/scripts/echo.cmd").getFile()).getAbsolutePath());
             } else {
-                command.add("src/test/resources/scripts/echo.sh");
-                setShellRights("src/test/resources/scripts/echo.sh");
+                String path = new File(getClass().getResource("/scripts/echo.sh").getFile()).getAbsolutePath();
+                command.add(path);
+                setShellRights(path);
             }
             command.add("foo");
             assertEquals(0, sensor.executeCommand(command, stdOut, stdErr));

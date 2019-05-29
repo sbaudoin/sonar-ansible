@@ -24,7 +24,7 @@ public class AnsibleSettingsTest extends TestCase {
     public void testGetProperties() {
         List<PropertyDefinition> defs = AnsibleSettings.getProperties();
 
-        assertEquals(1, defs.size());
+        assertEquals(2, defs.size());
         assertEquals(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, defs.get(0).key());
         assertEquals(AnsibleSettings.ANSIBLE_LINT_PATH_DEFAULT_VALUE, defs.get(0).defaultValue());
     }
