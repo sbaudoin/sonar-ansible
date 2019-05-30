@@ -44,7 +44,16 @@ Tested on Linux.
 3. Log in SonarQube
 4. Create a new quality profile for YAML and enable the Ansible rules (search with the tag "ansible")
 5. Install Ansible Lint and the Sonar scanner on a Linux machine. If needed, you can set the path to the ansible-lint executable
-   in the general settings of SonarQube.
+   in the general settings of SonarQube (see below).
+   
+### Configuration
+The plugin supports different parameters that you can set in at the general or project level:
+* Path to the `ansible-lint` executable. If not set, `ansible-lint` is expected to be available in the path (which should be the case for standard ansible-lint installations)
+* [As of version 2.2.0](https://github.com/sbaudoin/sonar-ansible/releases/tag/v2.2.0), path to an [ansible-lint configuration file](https://docs.ansible.com/ansible-lint/configuring/configuring.html#configuration-file). If set,
+  a `-c` option is passed to ansible-lint with the indicated configuration file path; if not set, no `-c` option is passed and ansible-lint will look at a `.ansible-lint`
+  located in the same directory as the `sonar-project.properties` file.
+
+Paths can be absolute or relative. Paths are relative to the root of the project.
 
 ### Execution
 1. Prior to executing a code audit, you must create a file `sonar-project.properties` that will contain some details about your project (this is a requirement from the Sonar scanner):
@@ -65,7 +74,7 @@ Tested on Linux.
     ```
 
     You just have to do that once. Ideally, add this file along with your playbooks in your preferred SCM.
-2. Run the Sonar scanner from the playbook directory :
+2. Run the Sonar scanner from the playbook directory:
 
         sonar-scanner
 
