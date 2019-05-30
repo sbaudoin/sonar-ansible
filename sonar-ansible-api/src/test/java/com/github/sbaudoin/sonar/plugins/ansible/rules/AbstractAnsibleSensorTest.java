@@ -43,6 +43,7 @@ import org.sonar.api.utils.log.LoggerLevel;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static com.github.sbaudoin.sonar.plugins.ansible.Utils.issueExists;
 import static com.github.sbaudoin.sonar.plugins.ansible.Utils.setShellRights;
@@ -165,6 +166,48 @@ public class AbstractAnsibleSensorTest {
 
         Collection<Issue> issues = context.allIssues();
         assertEquals(0, issues.size());
+    }
+
+    @Test
+    public void testExecuteWithAnsibleLintWinthoutConf() throws IOException {
+        InputFile playbook1 = Utils.getInputFile("playbooks/playbook1.yml");
+        context.fileSystem().add(playbook1);
+
+        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY,
+                    new File(getClass().getResource("/scripts/echo_as_issue.cmd").getFile()).getAbsolutePath());
+        } else {
+            String path = new File(getClass().getResource("/scripts/echo_as_issue.sh").getFile()).getAbsolutePath();
+            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, path);
+            setShellRights(path);
+        }
+
+        sensor.executeWithAnsibleLint(context, null);
+        Collection<Issue> issues = context.allIssues();
+        assertEquals(1, issues.size());
+        assertTrue(issueExists(issues, ruleKey1, playbook1, 2, "-p --nocolor " + Pattern.quote(new File(playbook1.uri()).getAbsolutePath())));
+    }
+
+    @Test
+    public void testExecuteWithAnsibleLintWinthConf() throws IOException {
+        InputFile playbook1 = Utils.getInputFile("playbooks/playbook1.yml");
+        context.fileSystem().add(playbook1);
+
+        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY,
+                    new File(getClass().getResource("/scripts/echo_as_issue.cmd").getFile()).getAbsolutePath());
+        } else {
+            String path = new File(getClass().getResource("/scripts/echo_as_issue.sh").getFile()).getAbsolutePath();
+            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, path);
+            setShellRights(path);
+        }
+
+        context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_CONF_PATH_KEY, "/path/to/ansible-lint.conf");
+
+        sensor.executeWithAnsibleLint(context, null);
+        Collection<Issue> issues = context.allIssues();
+        assertEquals(1, issues.size());
+        assertTrue(issueExists(issues, ruleKey1, playbook1, 2, "-p --nocolor -c /path/to/ansible-lint\\.conf " + Pattern.quote(new File(playbook1.uri()).getAbsolutePath())));
     }
 
     @Test
