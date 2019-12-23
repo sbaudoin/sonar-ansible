@@ -31,7 +31,7 @@ This plugin leverages the [YAML SonarQube plugin](https://github.com/sbaudoin/so
 
 ## Installation and execution
 ### Requirements
-* SonarQube 6.6 minimum with the [SonarQube plugin for YAML](https://github.com/sbaudoin/sonar-yaml/) (the exact required version is detailed in the [release page of the Ansible plugin](releases)).
+* SonarQube 6.7 LTS, 7.7+ or 8.0+ with the [SonarQube plugin for YAML](https://github.com/sbaudoin/sonar-yaml/) (the exact required version is detailed in the [release page of the Ansible plugin](releases)).
 * On the machine that will audit the code:
     * [ansible-lint](https://github.com/ansible/ansible-lint/) version 3.4+ must be installed
     * [Sonar scanner](https://github.com/SonarSource/sonar-scanner-cli) configured to point to your Sonar server

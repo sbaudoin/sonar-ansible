@@ -23,9 +23,9 @@ install:
 script:
   - mvn clean package sonar:sonar -P audit,build
   - bash it/it.sh 6.7-community 3.4.0.1729
-  - bash it/it.sh 7.5-community 3.4.0.1729
-  - bash it/it.sh 7.6-community 3.4.0.1729
-  - bash it/it.sh 7.7-community 3.4.0.1729
+  - bash it/it.sh 7.8-community 3.4.0.1729 11
+  - bash it/it.sh 7.9-community 3.4.0.1729 11
+  - bash it/it.sh 8.0-community-beta 3.4.0.1729 11
 deploy:
   - provider: script
     script: bash .travis/deploy.sh
