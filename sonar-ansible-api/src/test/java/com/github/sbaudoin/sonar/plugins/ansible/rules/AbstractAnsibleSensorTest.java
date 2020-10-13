@@ -160,7 +160,6 @@ public class AbstractAnsibleSensorTest {
 
         theSensor.executeWithAnsibleLint(context, Arrays.asList("foo", "bar"));
         assertEquals(1, theSensor.scannedFiles.size());
-        assertTrue(theSensor.scannedFiles.contains(playbook1));
 
         Collection<Issue> issues = context.allIssues();
         assertEquals(0, issues.size());
@@ -276,17 +275,18 @@ public class AbstractAnsibleSensorTest {
         assertFalse(sensor.registerIssue("filename:12:[Exxx] invalid issue"));
         assertFalse(sensor.registerIssue("filename:12: [Exxx invalid issue"));
 
-        File file1 = new File("/path/to/myfile.yml");
+        File file1 = new File(context.fileSystem().baseDir().getAbsolutePath(), "path/to/myfile.yml");
         assertTrue(sensor.registerIssue(file1.getPath() + ":2: [Exxx] there is a problem"));
         assertTrue(sensor.registerIssue(file1.getPath() + ":3: [Eyyy] there is another problem"));
         File file2 = new File("/path/to/another/file.yml");
+        File file2Absolute = new File(context.fileSystem().baseDir().getAbsolutePath(), file2.getPath());
         assertTrue(sensor.registerIssue(file2.getPath() + ":2: [Exxx] there is a problem"));
         assertEquals(2, sensor.allIssues.size());
         assertEquals(2, sensor.allIssues.get(file1.toURI()).size());
         assertTrue(sensor.allIssues.get(file1.toURI()).contains("2: [Exxx] there is a problem"));
         assertTrue(sensor.allIssues.get(file1.toURI()).contains("3: [Eyyy] there is another problem"));
-        assertEquals(1, sensor.allIssues.get(file2.toURI()).size());
-        assertTrue(sensor.allIssues.get(file2.toURI()).contains("2: [Exxx] there is a problem"));
+        assertEquals(1, sensor.allIssues.get(file2Absolute.toURI()).size());
+        assertTrue(sensor.allIssues.get(file2Absolute.toURI()).contains("2: [Exxx] there is a problem"));
     }
 
     @Test

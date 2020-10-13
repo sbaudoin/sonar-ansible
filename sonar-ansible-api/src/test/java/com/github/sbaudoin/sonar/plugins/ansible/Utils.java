@@ -45,8 +45,8 @@ public class Utils {
 
 
     public static InputFile getInputFile(String relativePath) throws IOException {
-        return TestInputFileBuilder.create(MODULE_KEY, BASE_DIR.resolve(relativePath).toString())
-                .setModuleBaseDir(Paths.get("."))
+        return TestInputFileBuilder.create(MODULE_KEY, relativePath)
+                .setModuleBaseDir(BASE_DIR)
                 .setContents(new String(Files.readAllBytes(BASE_DIR.resolve(relativePath))))
                 .setLanguage(YamlLanguage.KEY)
                 .setCharset(StandardCharsets.UTF_8)
