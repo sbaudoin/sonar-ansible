@@ -33,6 +33,8 @@ import javax.annotation.Nullable;
 import java.io.*;
 import java.net.URI;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Abstract class for sensors that takes in charge the execution of {@code ansible-lint}. The sensors just have to
@@ -226,19 +228,19 @@ public abstract class AbstractAnsibleSensor implements Sensor {
      * @see #allIssues
      */
     protected boolean registerIssue(String rawIssue) {
-        if (!rawIssue.matches("^.+:[0-9]+: \\[E.+\\] .+$")) {
+        Matcher splitter = Pattern.compile("^(.*):([0-9]+: \\[E.+\\] .+)$").matcher(rawIssue);
+        if (!splitter.matches()) {
             LOGGER.warn("Invalid issue syntax, ignoring: " + rawIssue);
             return false;
         }
 
-        String[] tokens = rawIssue.split(":", 2);
-
-        URI fileURI = new File(tokens[0]).toURI();
+        URI fileURI = (new File(splitter.group(1)).isAbsolute())?new File(splitter.group(1)).toURI():new File(fileSystem.baseDir(), splitter.group(1)).toURI();
+        LOGGER.debug("Resolved file URI: {}", fileURI);
 
         if (!allIssues.containsKey(fileURI)) {
             allIssues.put(fileURI, new HashSet<>());
         }
-        allIssues.get(fileURI).add(tokens[1]);
+        allIssues.get(fileURI).add(splitter.group(2));
 
         return true;
     }
