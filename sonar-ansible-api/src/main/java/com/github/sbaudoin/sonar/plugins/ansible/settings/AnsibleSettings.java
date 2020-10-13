@@ -44,7 +44,7 @@ public class AnsibleSettings {
                         .build(),
                 PropertyDefinition.builder(ANSIBLE_LINT_CONF_PATH_KEY)
                         .name("Path the an ansible-lint configuration file")
-                        .description("Path (absolute or relative to project root) the an ansible-lint configuration file. Leave it empty to use the default .ansible-lint file.")
+                        .description("Path (absolute or relative to project root) to an ansible-lint configuration file. Leave it empty to use the default .ansible-lint file.")
                         .defaultValue(ANSIBLE_LINT_CONF_PATH_DEFAULT_VALUE)
                         .category("Ansible")
                         .onQualifiers(Qualifiers.PROJECT)
