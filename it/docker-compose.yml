@@ -19,3 +19,5 @@ services:
     command: /bin/bash -e /usr/src/myapp/it/audit.sh
     environment:
       SCANNER_VERSION:
+      AL_VERSION:
+      ANSIBLE_VERSION:

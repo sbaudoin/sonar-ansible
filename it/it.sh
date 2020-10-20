@@ -3,9 +3,11 @@
 export SONARQUBE_VERSION="$1"
 export SCANNER_VERSION="$2"
 export JAVA_VERSION="$3"
+export AL_VERSION="$4"
+export ANSIBLE_VERSION="$5"
 if [ -z "$SCANNER_VERSION" ]
 then
-    echo "Missing parameters: <SonarQube version> <scanner version>" >&2
+    echo "Missing parameters: <SonarQube version> <scanner version> [Java version] [ansible-lint version] [ansible version]" >&2
     exit 1
 fi
 
