@@ -1,0 +1,20 @@
+--- weakref.py.ori      2020-07-09 13:00:10.000000000 +0000
++++ weakref.py  2020-10-28 13:55:13.960089398 +0000
+@@ -106,7 +106,7 @@
+         self, *args = args
+         if len(args) > 1:
+             raise TypeError('expected at most 1 arguments, got %d' % len(args))
+-        def remove(wr, selfref=ref(self)):
++        def remove(wr, selfref=ref(self), _atomic_removal=_remove_dead_weakref):
+             self = selfref()
+             if self is not None:
+                 if self._iterating:
+@@ -114,7 +114,7 @@
+                 else:
+                     # Atomic removal is necessary since this function
+                     # can be called asynchronously by the GC
+-                    _remove_dead_weakref(d, wr.key)
++                    _atomic_removal(d, wr.key)
+         self._remove = remove
+         # A list of keys to be removed
+         self._pending_removals = []
