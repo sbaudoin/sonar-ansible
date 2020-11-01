@@ -114,8 +114,18 @@ public class AbstractAnsibleSensorTest {
         assertTrue(sensor.scannedFiles.contains(playbook3));
         assertEquals(0, context.allIssues().size());
 
+        // First test: warnings enabled
         assertEquals(3, logTester.logs(LoggerLevel.WARN).size());
-        logTester.logs(LoggerLevel.WARN).stream().forEach(log -> assertTrue(log.startsWith("Errors happened during analysis:")));
+        logTester.logs(LoggerLevel.WARN).stream().forEach(log -> assertTrue(log.startsWith("Errors happened during analysis:") && log.contains("WARNING ")));
+
+        // Second test: warnings disabled
+        logTester.clear();
+        context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_DISABLE_WARNINGS_KEY, "true");
+        sensor.executeWithAnsibleLint(context, null);
+        assertEquals(1, logTester.logs(LoggerLevel.INFO).size());
+        assertTrue(logTester.logs(LoggerLevel.INFO).get(0).startsWith("You asked not to see the ansible-lint warnings"));
+        assertEquals(3, logTester.logs(LoggerLevel.WARN).size());
+        logTester.logs(LoggerLevel.WARN).stream().forEach(log -> assertTrue(log.startsWith("Errors happened during analysis:") && !log.contains("WARNING ")));
     }
 
     @Test
@@ -141,9 +151,10 @@ public class AbstractAnsibleSensorTest {
         assertTrue(sensor.scannedFiles.contains(playbook3));
 
         Collection<Issue> issues = context.allIssues();
-        assertEquals(4, issues.size());
+        assertEquals(5, issues.size());
         assertTrue(issueExists(issues, ruleKey1, playbook1, 2, "A first error"));
         assertTrue(issueExists(issues, ruleKey2, playbook1, 3, "An error -p"));
+        assertTrue(issueExists(issues, ruleKey2, playbook1, 4, null));
         assertTrue(issueExists(issues, ruleKey3, playbook1, 5, "Another error foo"));
         assertTrue(issueExists(issues, ruleKey3, playbook2, 3, "Another error bar"));
     }
@@ -182,7 +193,7 @@ public class AbstractAnsibleSensorTest {
         sensor.executeWithAnsibleLint(context, null);
         Collection<Issue> issues = context.allIssues();
         assertEquals(1, issues.size());
-        assertTrue(issueExists(issues, ruleKey1, playbook1, 2, "-p --nocolor " + Pattern.quote(new File(playbook1.uri()).getAbsolutePath())));
+        assertTrue(issueExists(issues, ruleKey1, playbook1, 2, "-p --nocolor -q " + Pattern.quote(new File(playbook1.uri()).getAbsolutePath())));
     }
 
     @Test
@@ -204,7 +215,7 @@ public class AbstractAnsibleSensorTest {
         sensor.executeWithAnsibleLint(context, null);
         Collection<Issue> issues = context.allIssues();
         assertEquals(1, issues.size());
-        assertTrue(issueExists(issues, ruleKey1, playbook1, 2, "-p --nocolor -c /path/to/ansible-lint\\.conf " + Pattern.quote(new File(playbook1.uri()).getAbsolutePath())));
+        assertTrue(issueExists(issues, ruleKey1, playbook1, 2, "-p --nocolor -q -c /path/to/ansible-lint\\.conf " + Pattern.quote(new File(playbook1.uri()).getAbsolutePath())));
     }
 
     @Test
@@ -274,19 +285,28 @@ public class AbstractAnsibleSensorTest {
         assertFalse(sensor.registerIssue("filename:12:[Exxx]invalid issue"));
         assertFalse(sensor.registerIssue("filename:12:[Exxx] invalid issue"));
         assertFalse(sensor.registerIssue("filename:12: [Exxx invalid issue"));
+        assertFalse(sensor.registerIssue("xxx filename:12: invalid issue"));
 
         File file1 = new File(context.fileSystem().baseDir().getAbsolutePath(), "path/to/myfile.yml");
         assertTrue(sensor.registerIssue(file1.getPath() + ":2: [Exxx] there is a problem"));
-        assertTrue(sensor.registerIssue(file1.getPath() + ":3: [Eyyy] there is another problem"));
-        File file2 = new File("/path/to/another/file.yml");
+        assertTrue(sensor.registerIssue("xxx " + file1.getPath() + ":2"));
+        assertTrue(sensor.registerIssue("xxx " + file1.getPath() + ":3"));
+        assertTrue(sensor.registerIssue("yyy " + file1.getPath() + ":4"));
+        assertTrue(sensor.registerIssue(file1.getPath() + ":4: [Eyyy] there is another problem"));
+        assertTrue(sensor.registerIssue("yyy " + file1.getPath() + ":5"));
+        File file2 = new File("path/to/another/file.yml");
         File file2Absolute = new File(context.fileSystem().baseDir().getAbsolutePath(), file2.getPath());
         assertTrue(sensor.registerIssue(file2.getPath() + ":2: [Exxx] there is a problem"));
+        assertTrue(sensor.registerIssue("xxx " + file2.getPath() + ":3"));
         assertEquals(2, sensor.allIssues.size());
-        assertEquals(2, sensor.allIssues.get(file1.toURI()).size());
-        assertTrue(sensor.allIssues.get(file1.toURI()).contains("2: [Exxx] there is a problem"));
-        assertTrue(sensor.allIssues.get(file1.toURI()).contains("3: [Eyyy] there is another problem"));
-        assertEquals(1, sensor.allIssues.get(file2Absolute.toURI()).size());
-        assertTrue(sensor.allIssues.get(file2Absolute.toURI()).contains("2: [Exxx] there is a problem"));
+        assertEquals(4, sensor.allIssues.get(file1.toURI()).size());
+        assertTrue(sensor.allIssues.get(file1.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(2, "xxx", "there is a problem")));
+        assertTrue(sensor.allIssues.get(file1.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(3, "xxx")));
+        assertTrue(sensor.allIssues.get(file1.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(4, "yyy")));
+        assertTrue(sensor.allIssues.get(file1.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(5, "yyy")));
+        assertEquals(2, sensor.allIssues.get(file2Absolute.toURI()).size());
+        assertTrue(sensor.allIssues.get(file2Absolute.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(2, "xxx", "there is a problem")));
+        assertTrue(sensor.allIssues.get(file2Absolute.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(3, "xxx")));
     }
 
     @Test
@@ -304,13 +324,15 @@ public class AbstractAnsibleSensorTest {
         sensor.registerIssue(playbook1.toString() + ":4: [AnyCheck2] Another error");
         sensor.registerIssue(playbook1.toString() + ":5: [EAnyCheck2] Another error");
         sensor.registerIssue(playbook2.toString() + ":3: [EAnyCheck2] Another error");
+        sensor.registerIssue("AnyCheck2 " + playbook2.toString() + ":2");
         sensor.saveIssues(context);
 
         Collection<Issue> issues = context.allIssues();
-        assertEquals(3, issues.size());
+        assertEquals(4, issues.size());
         assertTrue(issueExists(issues, ruleKey2, playbook1, 3, "An error"));
         assertTrue(issueExists(issues, ruleKey3, playbook1, 5, "Another error"));
         assertTrue(issueExists(issues, ruleKey3, playbook2, 3, "Another error"));
+        assertTrue(issueExists(issues, ruleKey3, playbook2, 2, null));
     }
 
     @Test
@@ -319,20 +341,29 @@ public class AbstractAnsibleSensorTest {
 
         // Try to save issue for an unknown rule
         logTester.clear();
-        sensor.saveIssue(context, playbook, 2, "foo", "An error here");
+        sensor.saveIssue(context, playbook, new AbstractAnsibleSensor.AnsibleLintIssue(2, "foo", "An error here"));
         assertEquals(1, logTester.logs(LoggerLevel.DEBUG).size());
         assertEquals("Rule foo ignored, not found in repository", logTester.logs(LoggerLevel.DEBUG).get(0));
 
-        // Save issue for a known rule
+        // Save issue for known rules with and without a message
         logTester.clear();
-        sensor.saveIssue(context, playbook, 2, RULE_ID2, "An error here");
-        assertEquals(1, context.allIssues().size());
-        Issue issue = (Issue)context.allIssues().toArray()[0];
-        assertEquals(ruleKey2, issue.ruleKey());
-        IssueLocation location = issue.primaryLocation();
-        assertEquals(playbook.key(), location.inputComponent().key());
-        assertEquals(2, location.textRange().start().line());
-        assertEquals("An error here", location.message());
+        sensor.saveIssue(context, playbook, new AbstractAnsibleSensor.AnsibleLintIssue(2, RULE_ID2, "An error here"));
+        sensor.saveIssue(context, playbook, new AbstractAnsibleSensor.AnsibleLintIssue(3, RULE_ID3));
+
+        assertEquals(2, context.allIssues().size());
+        Issue issue1 = (Issue)context.allIssues().toArray()[0];
+        assertEquals(ruleKey2, issue1.ruleKey());
+        IssueLocation location1 = issue1.primaryLocation();
+        assertEquals(playbook.key(), location1.inputComponent().key());
+        assertEquals(2, location1.textRange().start().line());
+        assertEquals("An error here", location1.message());
+
+        Issue issue2 = (Issue)context.allIssues().toArray()[1];
+        assertEquals(ruleKey3, issue2.ruleKey());
+        IssueLocation location2 = issue2.primaryLocation();
+        assertEquals(playbook.key(), location2.inputComponent().key());
+        assertEquals(3, location2.textRange().start().line());
+        assertNull(location2.message());
     }
 
     @Test

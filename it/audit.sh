@@ -37,6 +37,10 @@ curl -s -o /dev/null -w "%{http_code}\n" -u admin:admin -X POST 'http://sonarqub
 PROFILE_KEY=`curl -s -u admin:admin 'http://sonarqube:9000/api/qualityprofiles/search?qualityProfile=Ansible&language=yaml' | sed 's/.*"key":"\([^"]*\)".*/\1/'`
 curl -s -o /dev/null -w "%{http_code}\n" -u admin:admin -X POST 'http://sonarqube:9000/api/qualityprofiles/activate_rules?targetKey='$PROFILE_KEY'&tags=ansible' | grep -q 200
 
+# Disable warnings
+echo "Disable ansible-lint warnings..."
+curl -s -o /dev/null -w "%{http_code}\n" -u admin:admin -X POST 'http://sonarqube:9000/api/settings/set?key=sonar.ansible.ansiblelint.disable_warnings&value=true' | grep -q 204
+
 # Install sonar-runner
 echo "Installing Sonar scanner..."
 cd /tmp
