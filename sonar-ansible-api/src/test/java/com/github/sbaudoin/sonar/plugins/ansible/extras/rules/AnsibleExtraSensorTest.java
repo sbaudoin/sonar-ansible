@@ -96,10 +96,11 @@ public class AnsibleExtraSensorTest {
         sensor.execute(context);
 
         Collection<Issue> issues = context.allIssues();
-        assertEquals(3, issues.size());
+        assertEquals(4, issues.size());
         assertTrue(issueExists(issues, ruleKey1, playbook1, 3, "An error -p"));
+        assertTrue(issueExists(issues, ruleKey1, playbook1, 4, null));
         assertTrue(issueExists(issues, ruleKey2, playbook1, 5, "Another error --nocolor"));
-        assertTrue(issueExists(issues, ruleKey2, playbook2, 3, "Another error -r"));
+        assertTrue(issueExists(issues, ruleKey2, playbook2, 3, "Another error -q"));
     }
 
     @Test

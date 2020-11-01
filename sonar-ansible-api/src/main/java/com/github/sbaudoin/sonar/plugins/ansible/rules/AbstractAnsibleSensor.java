@@ -35,6 +35,7 @@ import java.net.URI;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Abstract class for sensors that takes in charge the execution of {@code ansible-lint}. The sensors just have to
@@ -50,6 +51,13 @@ import java.util.regex.Pattern;
 public abstract class AbstractAnsibleSensor implements Sensor {
     private static final Logger LOGGER = Loggers.get(AbstractAnsibleSensor.class);
 
+
+    /**
+     * Flag used to make sure we notify about warnings disabled only once
+     */
+    private boolean infoWarningsShown = false;
+
+
     /**
      * The underlying file system that will give access to the files to be analyzed
      */
@@ -64,7 +72,7 @@ public abstract class AbstractAnsibleSensor implements Sensor {
      * All issues found on the analyzed code. This key is the URI to the files where the issues were found and the
      * value is the issue message returned by {@code ansible-lint}
      */
-    protected final Map<URI, Set<String>> allIssues = new HashMap<>();
+    protected final Map<URI, Set<AnsibleLintIssue>> allIssues = new HashMap<>();
 
     /**
      * The list of files analyzed by this sensor. As {@code ansible-lint} will not aggregate the issues per file,
@@ -108,7 +116,7 @@ public abstract class AbstractAnsibleSensor implements Sensor {
 
             // Build ansible-lint command
             List<String> command = new ArrayList<>();
-            command.addAll(Arrays.asList(getAnsibleLintPath(context), "-p", "--nocolor"));
+            command.addAll(Arrays.asList(getAnsibleLintPath(context), "-p", "--nocolor", "-q"));
             String confPath = getAnsibleLintConfPath(context);
             if (!"".equals(confPath.trim())) {
                 command.addAll(Arrays.asList("-c", confPath));
@@ -129,7 +137,17 @@ public abstract class AbstractAnsibleSensor implements Sensor {
             } catch (IOException e) {
                 return;
             }
-            if (!error.isEmpty()) {
+            // We may ignore ansible-lint warnings
+            if (context.config().getBoolean(AnsibleSettings.ANSIBLE_LINT_DISABLE_WARNINGS_KEY).orElse(false) &&
+                    (!LOGGER.isDebugEnabled() && !LOGGER.isTraceEnabled())) {
+                if (!infoWarningsShown) {
+                    LOGGER.info("You asked not to see the ansible-lint warnings. If you think the analysis result is not relevant, change the plug-in configuration to see warnings or run the scanner in debug mode to see the warnings.");
+                    infoWarningsShown = true;
+                }
+                error = error.stream().filter(line -> !line.startsWith("WARNING ")).collect(Collectors.toList());
+            }
+            // We ignore errors if they are only empty strings
+            if (!error.isEmpty() && !"".equals(error.stream().reduce((str1, str2) -> str1.trim() + str2.trim()).orElse(""))) {
                 LOGGER.warn("Errors happened during analysis:{}{}",
                         System.getProperty("line.separator"),
                         String.join(System.getProperty("line.separator"), error)
@@ -228,19 +246,29 @@ public abstract class AbstractAnsibleSensor implements Sensor {
      * @see #allIssues
      */
     protected boolean registerIssue(String rawIssue) {
-        Matcher splitter = Pattern.compile("^(.*):([0-9]+: \\[E.+\\] .+)$").matcher(rawIssue);
-        if (!splitter.matches()) {
+        Matcher oldSplitter = Pattern.compile("^(.*):([0-9]+): \\[E(.+)\\] (.+)$").matcher(rawIssue);
+        Matcher newSplitter = Pattern.compile("^([^ ]+) (.+):([0-9]+)$").matcher(rawIssue);
+
+        String filePath;
+        AnsibleLintIssue issue;
+        if (oldSplitter.matches()) {
+            filePath = oldSplitter.group(1);
+            issue = new AnsibleLintIssue(Integer.parseInt(oldSplitter.group(2)), oldSplitter.group(3), oldSplitter.group(4));
+        } else if (newSplitter.matches()) {
+            filePath = newSplitter.group(2);
+            issue = new AnsibleLintIssue(Integer.parseInt(newSplitter.group(3)), newSplitter.group(1));
+        } else {
             LOGGER.warn("Invalid issue syntax, ignoring: " + rawIssue);
             return false;
         }
 
-        URI fileURI = (new File(splitter.group(1)).isAbsolute())?new File(splitter.group(1)).toURI():new File(fileSystem.baseDir(), splitter.group(1)).toURI();
+        URI fileURI = (new File(filePath).isAbsolute())?new File(filePath).toURI():new File(fileSystem.baseDir(), filePath).toURI();
         LOGGER.debug("Resolved file URI: {}", fileURI);
 
         if (!allIssues.containsKey(fileURI)) {
             allIssues.put(fileURI, new HashSet<>());
         }
-        allIssues.get(fileURI).add(splitter.group(2));
+        allIssues.get(fileURI).add(issue);
 
         return true;
     }
@@ -254,13 +282,11 @@ public abstract class AbstractAnsibleSensor implements Sensor {
     protected void saveIssues(SensorContext context) {
         for (InputFile inputFile : scannedFiles) {
             LOGGER.debug("Saving issues for {}", inputFile.uri());
-            Set<String> issues = allIssues.getOrDefault(inputFile.uri(), new HashSet<>());
-            for (String issue : issues) {
-                // Saved issues must have been registered first, so we are sure there is an extra :
-                String[] tokens = issue.split(":", 2);
+            Set<AnsibleLintIssue> issues = allIssues.getOrDefault(inputFile.uri(), new HashSet<>());
+            for (AnsibleLintIssue issue : issues) {
+                // Saved issues must have been registered first
                 LOGGER.debug("  Saving issue: {}", issue);
-                String[] ruleTokens = tokens[1].trim().split("\\] ", 2);
-                saveIssue(context, inputFile, Integer.parseInt(tokens[0]), ruleTokens[0].replace("[E", ""), ruleTokens[1]);
+                saveIssue(context, inputFile, issue);
             }
         }
     }
@@ -270,30 +296,30 @@ public abstract class AbstractAnsibleSensor implements Sensor {
      *
      * @param context the context
      * @param inputFile the file where the issue was found
-     * @param line the line where the issue was found
-     * @param ruleId the Id of the rule that raised the issue
-     * @param message a message describing the issue
+     * @param issue an issue that ansible-lint detected on the input file
      */
-    protected void saveIssue(SensorContext context, InputFile inputFile, int line, String ruleId, String message) {
-        RuleKey ruleKey = getRuleKey(context, ruleId);
+    protected void saveIssue(SensorContext context, InputFile inputFile, AnsibleLintIssue issue) {
+        RuleKey ruleKey = getRuleKey(context, issue.getId());
 
         // Old rules (ansible-lint < 3.5) had id ANSIBLE... but now it is E... so we may need to add the heading E back
         if (ruleKey == null) {
-            ruleKey = getRuleKey(context, "E" + ruleId);
+            ruleKey = getRuleKey(context, "E" + issue.getId());
         }
 
         if (ruleKey == null) {
-            LOGGER.debug("Rule " + ruleId + " ignored, not found in repository");
+            LOGGER.debug("Rule " + issue.getId() + " ignored, not found in repository");
             return;
         }
 
         NewIssue newIssue = context.newIssue().forRule(ruleKey);
         NewIssueLocation location = newIssue.newLocation()
                 .on(inputFile)
-                .message(message)
-                .at(inputFile.selectLine(line));
+                .at(inputFile.selectLine(issue.getLine()));
+        if (issue.getMessage() != null) {
+            location.message(issue.getMessage());
+        }
         newIssue.at(location).save();
-        LOGGER.debug("Issue {} saved for {}", ruleId, inputFile.filename());
+        LOGGER.debug("Issue {} saved for {}", issue.getId(), inputFile.filename());
     }
 
     /**
@@ -307,6 +333,61 @@ public abstract class AbstractAnsibleSensor implements Sensor {
     protected RuleKey getRuleKey(SensorContext context, String ruleId) {
         RuleKey key = AnsibleCheckRepository.getRuleKey(ruleId);
         return (context.activeRules().find(key) != null)?key:null;
+    }
+
+
+    /**
+     * Bean that represents an issue as returned by ansible-lint
+     */
+    protected static class AnsibleLintIssue {
+        private int line;
+        private String id;
+        // message is mostly there for information: the couple (line number, error id) is sufficient to uniquely identify
+        // an issue
+        private String message;
+
+
+        public AnsibleLintIssue(int line, String id) {
+            this.line = line;
+            this.id = id;
+        }
+
+        public AnsibleLintIssue(int line, String id, String message) {
+            this.line = line;
+            this.id = id;
+            this.message = message;
+        }
+
+        public int getLine() {
+            return line;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        @Override
+        public String toString() {
+            return line + ": [E" + id + "]" + ((message == null)?"":(" " + message));
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            AnsibleLintIssue issue = (AnsibleLintIssue)o;
+            return line == issue.line &&
+                    Objects.equals(id, issue.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(line, id);
+        }
     }
 
 

@@ -68,7 +68,7 @@ public class Utils {
             if (issue.ruleKey().equals(ruleKey) &&
                     file.key().equals(location.inputComponent().key()) &&
                     line == location.textRange().start().line() &&
-                    location.message().matches(regex)
+                    (regex == null && location.message() == null || regex != null && location.message().matches(regex))
             ) {
                 return true;
             }

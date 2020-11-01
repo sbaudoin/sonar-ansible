@@ -15,6 +15,7 @@
  */
 package com.github.sbaudoin.sonar.plugins.ansible.settings;
 
+import org.sonar.api.PropertyType;
 import org.sonar.api.config.PropertyDefinition;
 import org.sonar.api.resources.Qualifiers;
 
@@ -27,6 +28,8 @@ public class AnsibleSettings {
     public static final String ANSIBLE_LINT_PATH_DEFAULT_VALUE = "";
     public static final String ANSIBLE_LINT_CONF_PATH_KEY = "sonar.ansible.ansiblelint.conf.path";
     public static final String ANSIBLE_LINT_CONF_PATH_DEFAULT_VALUE = "";
+    public static final String ANSIBLE_LINT_DISABLE_WARNINGS_KEY = "sonar.ansible.ansiblelint.disable_warnings";
+    public static final String ANSIBLE_LINT_DISABLE_WARNINGS_DEFAULT_VALUE = "false";
 
 
     private AnsibleSettings() {
@@ -48,6 +51,15 @@ public class AnsibleSettings {
                         .defaultValue(ANSIBLE_LINT_CONF_PATH_DEFAULT_VALUE)
                         .category("Ansible")
                         .onQualifiers(Qualifiers.PROJECT)
-                        .build());
+                        .build(),
+                PropertyDefinition.builder(ANSIBLE_LINT_DISABLE_WARNINGS_KEY)
+                        .name("Disable ansible-lint warnings")
+                        .description("By default, the plugin will show warnings in the scanner output when ansible-lint does; check the box if you want to ignore those warnings and have a cleaner scanner output.")
+                        .type(PropertyType.BOOLEAN)
+                        .defaultValue(ANSIBLE_LINT_DISABLE_WARNINGS_DEFAULT_VALUE)
+                        .category("Ansible")
+                        .onQualifiers(Qualifiers.PROJECT)
+                        .build()
+        );
     }
 }
