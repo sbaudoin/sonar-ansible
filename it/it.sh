@@ -46,6 +46,7 @@ docker-compose -f $SCRIPT_DIR/docker-compose.yml restart sonarqube
 # Wait for SonarQube to be up
 grep -q "SonarQube is up" <(docker logs --follow --tail 0 $CONTAINER_NAME)
 # Check plug-in installation
+docker exec -u root $CONTAINER_NAME bash -c "if grep -q Alpine /etc/issue; then apk update && apk add -q curl; fi"
 if ! docker exec $CONTAINER_NAME curl -su admin:admin http://localhost:9000/api/plugins/installed | python -c '
 import sys
 import json
