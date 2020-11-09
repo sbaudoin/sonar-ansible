@@ -45,5 +45,5 @@
     apt: state=latest name=apache2
 
   - name: always run
-    debug: msg="always_run is deprecated"
-    always_run: true
+    debug: msg="sudo is deprecated"
+    sudo: root
