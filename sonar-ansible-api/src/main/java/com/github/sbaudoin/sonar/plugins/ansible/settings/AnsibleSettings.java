@@ -30,6 +30,7 @@ public class AnsibleSettings {
     public static final String ANSIBLE_LINT_CONF_PATH_DEFAULT_VALUE = "";
     public static final String ANSIBLE_LINT_DISABLE_WARNINGS_KEY = "sonar.ansible.ansiblelint.disable_warnings";
     public static final String ANSIBLE_LINT_DISABLE_WARNINGS_DEFAULT_VALUE = "false";
+    public static final String CATEGORY = "Ansible";
 
 
     private AnsibleSettings() {
@@ -42,14 +43,14 @@ public class AnsibleSettings {
                         .name("Path to ansible-lint")
                         .description("Path to the ansible-lint executable. Leave it empty if the command is in the system path.")
                         .defaultValue(ANSIBLE_LINT_PATH_DEFAULT_VALUE)
-                        .category("Ansible")
+                        .category(CATEGORY)
                         .onQualifiers(Qualifiers.PROJECT)
                         .build(),
                 PropertyDefinition.builder(ANSIBLE_LINT_CONF_PATH_KEY)
                         .name("Path the an ansible-lint configuration file")
                         .description("Path (absolute or relative to project root) to an ansible-lint configuration file. Leave it empty to use the default .ansible-lint file.")
                         .defaultValue(ANSIBLE_LINT_CONF_PATH_DEFAULT_VALUE)
-                        .category("Ansible")
+                        .category(CATEGORY)
                         .onQualifiers(Qualifiers.PROJECT)
                         .build(),
                 PropertyDefinition.builder(ANSIBLE_LINT_DISABLE_WARNINGS_KEY)
@@ -57,7 +58,7 @@ public class AnsibleSettings {
                         .description("By default, the plugin will show warnings in the scanner output when ansible-lint does; check the box if you want to ignore those warnings and have a cleaner scanner output.")
                         .type(PropertyType.BOOLEAN)
                         .defaultValue(ANSIBLE_LINT_DISABLE_WARNINGS_DEFAULT_VALUE)
-                        .category("Ansible")
+                        .category(CATEGORY)
                         .onQualifiers(Qualifiers.PROJECT)
                         .build()
         );

@@ -53,7 +53,7 @@ public abstract class AbstractAnsibleRulesDefinition implements RulesDefinition 
 
 
     private List<String> getRuleKeys() {
-        List<String> keys = new ArrayList();
+        List<String> keys = new ArrayList<>();
 
         URL definitionDir = getClass().getClassLoader().getResource(getRuleDefinitionPath());
         if (definitionDir == null) {

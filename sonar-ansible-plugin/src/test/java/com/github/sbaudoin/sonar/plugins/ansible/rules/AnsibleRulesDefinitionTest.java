@@ -16,6 +16,7 @@
 package com.github.sbaudoin.sonar.plugins.ansible.rules;
 
 import junit.framework.TestCase;
+import org.junit.Assert;
 import org.sonar.api.server.rule.RulesDefinition;
 import com.github.sbaudoin.sonar.plugins.ansible.checks.AnsibleCheckRepository;
 import com.github.sbaudoin.sonar.plugins.yaml.languages.YamlLanguage;
@@ -40,7 +41,7 @@ public class AnsibleRulesDefinitionTest extends TestCase {
 
         for (RulesDefinition.Rule rule : repository.rules()) {
             for (RulesDefinition.Param param : rule.params()) {
-                assertFalse("Description for " + param.key() + " should not be empty", "".equals(param.description()));
+                Assert.assertNotEquals("Description for " + param.key() + " should not be empty", "", param.description());
             }
         }
     }

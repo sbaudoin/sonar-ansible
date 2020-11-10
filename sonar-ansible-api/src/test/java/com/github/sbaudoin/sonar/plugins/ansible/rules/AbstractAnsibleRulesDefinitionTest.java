@@ -25,9 +25,7 @@ import com.github.sbaudoin.sonar.plugins.ansible.checks.AnsibleCheckRepository;
 import com.github.sbaudoin.sonar.plugins.yaml.languages.YamlLanguage;
 
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class AbstractAnsibleRulesDefinitionTest {
     @Rule
@@ -67,7 +65,7 @@ public class AbstractAnsibleRulesDefinitionTest {
 
         for (RulesDefinition.Rule rule : repository.rules()) {
             for (RulesDefinition.Param param : rule.params()) {
-                assertFalse("Description for " + param.key() + " should not be empty", "".equals(param.description()));
+                assertNotEquals("Description for " + param.key() + " should not be empty", "", param.description());
             }
         }
     }
