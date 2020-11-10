@@ -52,7 +52,7 @@
         <jdk.min.version>1.8</jdk.min.version>
         <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
         <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
-        <powermock.version>1.7.1</powermock.version>
+        <powermock.version>1.7.4</powermock.version>
         <jacoco.version>0.8.1</jacoco.version>
     </properties>
 
