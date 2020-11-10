@@ -21,9 +21,9 @@ before_install:
 install:
   - mvn --settings .travis/settings.xml install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
 script:
-  - mvn clean package sonar:sonar -P audit,build
-  - bash it/it.sh 6.7-community 3.4.0.1729 "" 4.1.0 2.8.16
-  - bash it/it.sh 7.9-community 3.4.0.1729 11 "" 2.8.16
+  - mvn clean package sonar:sonar -P audit,build || travis_terminate 1
+  - bash it/it.sh 6.7-community 3.4.0.1729 "" 4.1.0 2.8.16 || travis_terminate 1
+  - bash it/it.sh 7.9-community 3.4.0.1729 11 "" 2.8.16 || travis_terminate 1
   - bash it/it.sh 8.5-community 4.5.0.2216 11 "" 2.8.16
 deploy:
   - provider: script
