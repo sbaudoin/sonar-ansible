@@ -1,5 +1,5 @@
 {
-  "title": "meta/main.yml video_links should be formatted correctly",
+  "title": "File permissions unset or incorrect",
   "type": "CODE_SMELL",
   "status": "ready",
   "remediation": {
@@ -8,7 +8,8 @@
   },
   "tags": [
     "ansible",
-    "metadata"
+    "unpredictability",
+    "experimental"
   ],
-  "defaultSeverity": "Minor"
+  "defaultSeverity": "Blocker"
 }

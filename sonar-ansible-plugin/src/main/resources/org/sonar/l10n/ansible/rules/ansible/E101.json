@@ -1,5 +1,5 @@
 {
-  "title": "always_run is deprecated",
+  "title": "Deprecated always_run",
   "type": "CODE_SMELL",
   "status": "ready",
   "remediation": {
