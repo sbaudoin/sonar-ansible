@@ -121,12 +121,15 @@ The default Ansible Lint rules are available by default (but not activated). So 
 | `E103`        | Deprecated sudo                                                 |
 | `E104`        | Using bare variables is deprecated                              |
 | `E105`        | Deprecated module                                               |
+| `E106`        | Role name does not match `^[a-z][a-z0-9_]+$` pattern            |
 | `E201`        | Trailing whitespace                                             |
 | `E202`        | Octal file permissions must contain leading zero                |
 | `E203`        | Most files should not contain tabs                              |
 | `E204`        | Lines should be no longer than 120 chars                        |
 | `E205`        | Use ”.yml” or ”.yaml” playbook extension                        |
 | `E206`        | Variables should have spaces before and after: `{{ var_name }}` |
+| `E207`        | Nested jinja pattern                                            |
+| `E208`        | File permissions unset or incorrect                             |
 | `E301`        | Commands should not change things if nothing needs doing        |
 | `E302`        | Using command rather than an argument to e.g. file              |
 | `E303`        | Using command rather than module                                |
@@ -142,12 +145,14 @@ The default Ansible Lint rules are available by default (but not activated). So 
 | `E502`        | All tasks should be named                                       |
 | `E503`        | Tasks that run when changed should likely be handlers           |
 | `E504`        | Do not use `local_action`, use `delegate_to: localhost`         |
+| `E505`        | referenced files must exist                                     |
 | `E601`        | Don’t compare to literal True/False                             |
 | `E602`        | Don’t compare to empty string                                   |
 | `E701`        | `meta/main.yml` should contain relevant info                    |
 | `E702`        | Tags must contain lowercase letters and digits only             |
 | `E703`        | `meta/main.yml` default values should be changed                |
 | `E704`        | `meta/main.yml` video_links should be formatted correctly       |
+| `E901`        | Failed to load or parse file                                    |
 
 The `Exxx` rules are only available as of version 2.0.0 of this plugin and with `ansible-lint` version 3.5+.
 See [the Ansible documentation](https://docs.ansible.com/ansible-lint/rules/default_rules.html).

@@ -1,5 +1,5 @@
 {
-  "title": "meta/main.yml video_links should be formatted correctly",
+  "title": "Nested jinja pattern",
   "type": "CODE_SMELL",
   "status": "ready",
   "remediation": {
@@ -8,7 +8,7 @@
   },
   "tags": [
     "ansible",
-    "metadata"
+    "formatting"
   ],
-  "defaultSeverity": "Minor"
+  "defaultSeverity": "Blocker"
 }

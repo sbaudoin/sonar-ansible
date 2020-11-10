@@ -11,5 +11,5 @@
     "module",
     "repeatability"
   ],
-  "defaultSeverity": "Critical"
+  "defaultSeverity": "Major"
 }

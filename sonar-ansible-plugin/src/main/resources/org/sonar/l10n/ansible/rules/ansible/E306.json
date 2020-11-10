@@ -8,7 +8,8 @@
   },
   "tags": [
     "ansible",
-    "command-shell"
+    "command-shell",
+    "safety"
   ],
   "defaultSeverity": "Major"
 }

@@ -12,7 +12,7 @@
 
   tasks:
   - include: tasks/x.yml
-  - include: tasks/x.yml y=z
+  - include: tasks/x.yml
 
   handlers:
   - include: handlers/y.yml

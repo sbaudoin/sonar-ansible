@@ -1,5 +1,5 @@
 {
-  "title": "Lines should be no longer than 160 chars",
+  "title": "Role name does not match ^[a-z][a-z0-9_]+$ pattern",
   "type": "CODE_SMELL",
   "status": "ready",
   "remediation": {
@@ -8,7 +8,7 @@
   },
   "tags": [
     "ansible",
-    "formatting"
+    "deprecated"
   ],
-  "defaultSeverity": "Info"
+  "defaultSeverity": "Critical"
 }

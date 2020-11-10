@@ -1,14 +1,14 @@
 {
-  "title": "Lines should be no longer than 160 chars",
+  "title": "Failed to load or parse file",
   "type": "CODE_SMELL",
   "status": "ready",
   "remediation": {
     "func": "Constant\/Issue",
-    "constantCost": "10min"
+    "constantCost": "5min"
   },
   "tags": [
     "ansible",
-    "formatting"
+    "core"
   ],
-  "defaultSeverity": "Info"
+  "defaultSeverity": "Blocker"
 }

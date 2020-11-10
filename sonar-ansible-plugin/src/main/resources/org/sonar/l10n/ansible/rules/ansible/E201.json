@@ -10,5 +10,5 @@
     "ansible",
     "formatting"
   ],
-  "defaultSeverity": "Minor"
+  "defaultSeverity": "Info"
 }
