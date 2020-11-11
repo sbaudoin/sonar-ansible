@@ -13,21 +13,14 @@ echo "Testing with ansible version: ${ANSIBLE_VERSION:-latest}"
 
 # Install requirements
 echo "Installing requirements..."
-if grep -q Debian /etc/issue
+apt-get -qq update
+apt-get -qq remove -y python > /dev/null
+apt-get -qq autoremove -y > /dev/null
+apt-get -qq install -y python3-pip > /dev/null
+if [ "$(python3 --version)" == "Python 3.5.3" ]
 then
-    apt-get -qq update
-    apt-get -qq remove -y python > /dev/null
-    apt-get -qq autoremove -y > /dev/null
-    apt-get -qq install -y python3-pip > /dev/null
-    if [ "$(python3 --version)" == "Python 3.5.3" ]
-    then
-        patch /usr/lib/python3.5/weakref.py < /usr/src/myapp/it/py35.patch
-    fi
-else
-    apk update
-    apk add -q curl gcc musl-dev libffi-dev openssl-dev py3 py3-dev
+    patch /usr/lib/python3.5/weakref.py < /usr/src/myapp/it/py35.patch
 fi
-
 pip3 install -q ansible-lint$LINTER_VERSION $PIP_ANSIBLE requests requests[security]
 
 # Create quality profile to enable Ansible rules
