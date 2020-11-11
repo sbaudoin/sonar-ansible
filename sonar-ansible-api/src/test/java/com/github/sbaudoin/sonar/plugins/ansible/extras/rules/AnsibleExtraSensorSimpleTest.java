@@ -23,9 +23,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.rule.ActiveRules;
@@ -52,14 +49,10 @@ import static com.github.sbaudoin.sonar.plugins.ansible.Utils.setShellRights;
 import static com.github.sbaudoin.sonar.plugins.ansible.extras.rules.AnsibleExtraSensor.EXTRA_RULES_TEMP_DIR;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.powermock.api.mockito.PowerMockito.*;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({AnsibleExtraSensor.class})
-public class AnsibleExtraSensorTest {
+public class AnsibleExtraSensorSimpleTest {
     private static final String RULE_ID1 = "AnyCheck1";
     private static final String RULE_ID2 = "AnyCheck2";
     private final RuleKey ruleKey1 = RuleKey.of(AnsibleCheckRepository.REPOSITORY_KEY, RULE_ID1);
@@ -119,18 +112,6 @@ public class AnsibleExtraSensorTest {
     }
 
     @Test
-    public void testExtractExtraRulesCannotCreateTempDir() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException {
-        // Make the method public for test purpose
-        Method method = AnsibleExtraSensor.class.getDeclaredMethod("extractExtraRules", String.class);
-        method.setAccessible(true);
-
-        // Prevent the temporary directory from being created
-        mockStatic(Files.class);
-        when(Files.createTempDirectory(any(String.class))).thenThrow(new IOException("forbidden"));
-        assertNull(method.invoke(sensor, AnsibleExtraSensor.EXTRA_RULES_DIR));
-    }
-
-    @Test
     public void testExtractExtraRulesExtraRulesDirNotFound() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         // Make the method public for test purpose
         Method method = AnsibleExtraSensor.class.getDeclaredMethod("extractExtraRules", String.class);
@@ -152,65 +133,6 @@ public class AnsibleExtraSensorTest {
         assertTrue(tempDir.resolve("extra-rule2.cmd").toFile().exists());
         assertTrue(tempDir.resolve("extra-rule2.sh").toFile().exists());
     }
-
-    @Test
-    public void testExtractExtraRulesExtraRulesExtractionError1() throws Exception {
-        testExtractExtraRulesExtraRulesExtractionError(new DirectoryIteratorException(new IOException("forbidden")));
-    }
-
-    @Test
-    public void testExtractExtraRulesExtraRulesExtractionError2() throws Exception {
-        testExtractExtraRulesExtraRulesExtractionError(new URISyntaxException("syntax error", "syntax error"));
-    }
-
-    @Test
-    public void testExtractExtraRulesExtraRulesExtractionError3() throws Exception {
-        testExtractExtraRulesExtraRulesExtractionError(new IOException("forbidden"));
-    }
-
-    private void testExtractExtraRulesExtraRulesExtractionError(Exception e) throws Exception {
-        // Make the method public for test purpose
-        Method method = AnsibleExtraSensor.class.getDeclaredMethod("extractExtraRules", String.class);
-        method.setAccessible(true);
-
-        whenNew(com.github.sbaudoin.sonar.plugins.ansible.util.FileSystem.class).withAnyArguments().thenThrow(e);
-        assertNull(method.invoke(sensor, AnsibleExtraSensor.EXTRA_RULES_DIR));
-    }
-
-    @Test
-    public void testDeleteDirectoryWithError() throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        // Make the method public for test purpose
-        Method method = AnsibleExtraSensor.class.getDeclaredMethod("deleteDirectory", Path.class);
-        method.setAccessible(true);
-
-        // Create a temporary directory and copy some files
-        Path tempDir = Files.createTempDirectory(EXTRA_RULES_TEMP_DIR);
-        Path copyFile = tempDir.resolve(Paths.get("extra-rule1.sh"));
-        Files.copy(Paths.get("src/test/resources/extra-rules/extra-rule1.sh"), copyFile);
-
-        // First prevent the directory from being removed
-        mockStatic(Files.class);
-        when(Files.walkFileTree(any(Path.class), any(FileVisitor.class))).thenThrow(new IOException("forbidden"));
-        assertFalse((Boolean)method.invoke(sensor, tempDir));
-        assertTrue(tempDir.toFile().exists());
-        assertTrue(copyFile.toFile().exists());
-    }
-
-    @Test
-    public void testDeleteDirectory() throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        // Make the method public for test purpose
-        Method method = AnsibleExtraSensor.class.getDeclaredMethod("deleteDirectory", Path.class);
-        method.setAccessible(true);
-
-        // Create a temporary directory and copy some files
-        Path tempDir = Files.createTempDirectory(EXTRA_RULES_TEMP_DIR);
-        Path copyFile = tempDir.resolve(Paths.get("extra-rule1.sh"));
-        Files.copy(Paths.get("src/test/resources/extra-rules/extra-rule1.sh"), copyFile);
-
-        assertTrue((Boolean)method.invoke(sensor, tempDir));
-        assertFalse(tempDir.toFile().exists());
-    }
-
 
     @Before
     public void init() throws Exception {
