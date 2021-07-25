@@ -8,6 +8,7 @@
   },
   "tags": [
     "ansible",
+    "ansiblelint-3.4",
     "safety"
   ],
   "defaultSeverity": "Major"

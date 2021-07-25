@@ -8,6 +8,8 @@
   },
   "tags": [
     "ansible",
+    "ansiblelint-3.5",
+    "ansiblelint-4",
     "metadata"
   ],
   "defaultSeverity": "Critical"
