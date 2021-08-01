@@ -22,6 +22,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.sonar.api.batch.fs.InputFile;
@@ -49,6 +50,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({AnsibleExtraSensor.class})
+@PowerMockIgnore("jdk.internal.reflect.*")
 public class AnsibleExtraSensorAdvancedTest {
     private static final String RULE_ID1 = "AnyCheck1";
     private static final String RULE_ID2 = "AnyCheck2";
