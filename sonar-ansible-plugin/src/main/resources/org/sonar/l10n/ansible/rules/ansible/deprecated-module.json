@@ -1,0 +1,15 @@
+{
+  "title": "Deprecated module",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "5min"
+  },
+  "tags": [
+    "ansible",
+    "ansiblelint-5",
+    "deprecations"
+  ],
+  "defaultSeverity": "Critical"
+}

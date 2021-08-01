@@ -1,0 +1,16 @@
+{
+  "title": "Violations reported by yamllint",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "5min"
+  },
+  "tags": [
+    "ansible",
+    "ansiblelint-5",
+    "formatting",
+    "yaml"
+  ],
+  "defaultSeverity": "Info"
+}

@@ -1,0 +1,15 @@
+{
+  "title": "Variables should have spaces before and after: {{ var_name }}",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "5min"
+  },
+  "tags": [
+    "ansible",
+    "ansiblelint-5",
+    "formatting"
+  ],
+  "defaultSeverity": "Minor"
+}

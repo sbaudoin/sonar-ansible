@@ -1,0 +1,8 @@
+<p>Optional rule that hihglight dangers of assuming that user/group on the remote
+machines may not exist on ansible controller or vice versa. Owner and group
+should not be preserved when transferring files between them.</p>
+
+<p>This rule is not enabled by default and was inspired by Zuul execution policy.
+See:
+<a href="https://zuul-ci.org/docs/zuul-jobs/policy.html#preservation-of-owner-between-executor-and-remote">https://zuul-ci.org/docs/zuul-jobs/policy.html#preservation-of-owner-between-executor-and-remote</a>
+</p>

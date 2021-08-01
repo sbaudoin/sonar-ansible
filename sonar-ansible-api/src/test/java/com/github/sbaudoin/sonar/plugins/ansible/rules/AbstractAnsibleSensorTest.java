@@ -273,6 +273,7 @@ public class AbstractAnsibleSensorTest {
 
     @Test
     public void testRegisterIssue() {
+        // Test invalid syntax first
         assertFalse(sensor.registerIssue("invalid issue"));
         assertFalse(sensor.registerIssue("filename:invalid issue"));
         assertFalse(sensor.registerIssue("filename:a:invalid issue"));
@@ -287,23 +288,35 @@ public class AbstractAnsibleSensorTest {
         assertFalse(sensor.registerIssue("filename:12: [Exxx invalid issue"));
         assertFalse(sensor.registerIssue("xxx filename:12: invalid issue"));
 
+        // Now test valid syntax
         File file1 = new File(context.fileSystem().baseDir().getAbsolutePath(), "path/to/myfile.yml");
+        // Old flavour syntax
         assertTrue(sensor.registerIssue(file1.getPath() + ":2: [Exxx] there is a problem"));
+        assertTrue(sensor.registerIssue(file1.getPath() + ":4: [Eyyy] there is another problem"));
+        // New syntax flavour 1
         assertTrue(sensor.registerIssue("xxx " + file1.getPath() + ":2"));
         assertTrue(sensor.registerIssue("xxx " + file1.getPath() + ":3"));
         assertTrue(sensor.registerIssue("yyy " + file1.getPath() + ":4"));
-        assertTrue(sensor.registerIssue(file1.getPath() + ":4: [Eyyy] there is another problem"));
         assertTrue(sensor.registerIssue("yyy " + file1.getPath() + ":5"));
+        // New syntax flavour 2
+        assertTrue(sensor.registerIssue(file1.getPath() + ":2: xxx"));
+        assertTrue(sensor.registerIssue(file1.getPath() + ":3: xxx"));
+        assertTrue(sensor.registerIssue(file1.getPath() + ":4: yyy"));
+        assertTrue(sensor.registerIssue(file1.getPath() + ":5: xxx"));
         File file2 = new File("path/to/another/file.yml");
         File file2Absolute = new File(context.fileSystem().baseDir().getAbsolutePath(), file2.getPath());
+        // Old flavour syntax
         assertTrue(sensor.registerIssue(file2.getPath() + ":2: [Exxx] there is a problem"));
+        // New syntax flavour
         assertTrue(sensor.registerIssue("xxx " + file2.getPath() + ":3"));
+        assertTrue(sensor.registerIssue(file2.getPath() + ":3: xxx"));
         assertEquals(2, sensor.allIssues.size());
-        assertEquals(4, sensor.allIssues.get(file1.toURI()).size());
+        assertEquals(5, sensor.allIssues.get(file1.toURI()).size());
         assertTrue(sensor.allIssues.get(file1.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(2, "xxx", "there is a problem")));
         assertTrue(sensor.allIssues.get(file1.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(3, "xxx")));
         assertTrue(sensor.allIssues.get(file1.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(4, "yyy")));
         assertTrue(sensor.allIssues.get(file1.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(5, "yyy")));
+        assertTrue(sensor.allIssues.get(file1.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(5, "xxx")));
         assertEquals(2, sensor.allIssues.get(file2Absolute.toURI()).size());
         assertTrue(sensor.allIssues.get(file2Absolute.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(2, "xxx", "there is a problem")));
         assertTrue(sensor.allIssues.get(file2Absolute.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(3, "xxx")));

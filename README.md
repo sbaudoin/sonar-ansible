@@ -80,7 +80,7 @@ Paths can be absolute or relative. Paths are relative to the root of the project
 
 3. Go to SonarQube and check the result
 
-Subsequent scans will just required the last step to be executed. It can easily be integrated into a continuous integration pipeline.
+Subsequent scans will just require the last step to be executed. It can easily be integrated into a continuous integration pipeline.
 
 ## Severity levels mapping
 As of version 3.5, Ansible Lint defines severities. Here is the mapping with SonarQube's severity levels:
@@ -97,62 +97,103 @@ As of version 3.5, Ansible Lint defines severities. Here is the mapping with Son
 ## Standard and extended rules
 The default Ansible Lint rules are available by default (but not activated). So far:
 
-| Code          | Description                                                     |
-|---------------|-----------------------------------------------------------------|
-| `ANSIBLE0002` | Trailing whitespace                                             |
-| `ANSIBLE0004` | Git checkouts must contain explicit version                     |
-| `ANSIBLE0005` | Mercurial checkouts must contain explicit revision              |
-| `ANSIBLE0006` | Using command rather than module                                |
-| `ANSIBLE0007` | Using command rather than an argument to e.g. file              |
-| `ANSIBLE0008` | action sudo is deprecated                                       |
-| `ANSIBLE0009` | Octal file permissions must contain leading zero                |
-| `ANSIBLE0010` | Package installs should not use latest                          |
-| `ANSIBLE0011` | All tasks should be named                                       |
-| `ANSIBLE0012` | Commands should not change things if nothing needs doing        |
-| `ANSIBLE0013` | Use shell only when shell functionality is required             |
-| `ANSIBLE0014` | Environment variables don't work as part of command             |
-| `ANSIBLE0015` | Using bare variables is deprecated                              |
-| `ANSIBLE0016` | Tasks that run when changed should likely be handlers           |
-| `ANSIBLE0017` | become_user requires become to work as expected                 |
-| `ANSIBLE0018` | always_run is deprecated                                        |
-| `ANSIBLE0019` | No Jinja2 in when                                               |
-| `E101`        | Deprecated always_run                                           |
-| `E102`        | No Jinja2 in when                                               |
-| `E103`        | Deprecated sudo                                                 |
-| `E104`        | Using bare variables is deprecated                              |
-| `E105`        | Deprecated module                                               |
-| `E106`        | Role name does not match `^[a-z][a-z0-9_]+$` pattern            |
-| `E201`        | Trailing whitespace                                             |
-| `E202`        | Octal file permissions must contain leading zero                |
-| `E203`        | Most files should not contain tabs                              |
-| `E204`        | Lines should be no longer than 120 chars                        |
-| `E205`        | Use ”.yml” or ”.yaml” playbook extension                        |
-| `E206`        | Variables should have spaces before and after: `{{ var_name }}` |
-| `E207`        | Nested jinja pattern                                            |
-| `E208`        | File permissions unset or incorrect                             |
-| `E301`        | Commands should not change things if nothing needs doing        |
-| `E302`        | Using command rather than an argument to e.g. file              |
-| `E303`        | Using command rather than module                                |
-| `E304`        | Environment variables don’t work as part of command             |
-| `E305`        | Use shell only when shell functionality is required             |
-| `E306`        | Shells that use pipes should set the `pipefail` option          |
-| `E401`        | Git checkouts must contain explicit version                     |
-| `E402`        | Mercurial checkouts must contain explicit revision              |
-| `E403`        | Package installs should not use latest                          |
-| `E404`        | Doesn’t need a relative path in role                            |
-| `E405`        | Remote package tasks should have a retry                        |
-| `E501`        | become_user requires become to work as expected                 |
-| `E502`        | All tasks should be named                                       |
-| `E503`        | Tasks that run when changed should likely be handlers           |
-| `E504`        | Do not use `local_action`, use `delegate_to: localhost`         |
-| `E505`        | referenced files must exist                                     |
-| `E601`        | Don’t compare to literal True/False                             |
-| `E602`        | Don’t compare to empty string                                   |
-| `E701`        | `meta/main.yml` should contain relevant info                    |
-| `E702`        | Tags must contain lowercase letters and digits only             |
-| `E703`        | `meta/main.yml` default values should be changed                |
-| `E704`        | `meta/main.yml` video_links should be formatted correctly       |
-| `E901`        | Failed to load or parse file                                    |
+| Code                        | `ansible-Lint` version | Description                                                                 |
+|-----------------------------|------------------------|-----------------------------------------------------------------------------|
+| `ANSIBLE0002`               | 3.4                    | Trailing whitespace                                                         |
+| `ANSIBLE0004`               | 3.4                    | Git checkouts must contain explicit version                                 |
+| `ANSIBLE0005`               | 3.4                    | Mercurial checkouts must contain explicit revision                          |
+| `ANSIBLE0006`               | 3.4                    | Using command rather than module                                            |
+| `ANSIBLE0007`               | 3.4                    | Using command rather than an argument to e.g. file                          |
+| `ANSIBLE0008`               | 3.4                    | action sudo is deprecated                                                   |
+| `ANSIBLE0009`               | 3.4                    | Octal file permissions must contain leading zero                            |
+| `ANSIBLE0010`               | 3.4                    | Package installs should not use latest                                      |
+| `ANSIBLE0011`               | 3.4                    | All tasks should be named                                                   |
+| `ANSIBLE0012`               | 3.4                    | Commands should not change things if nothing needs doing                    |
+| `ANSIBLE0013`               | 3.4                    | Use shell only when shell functionality is required                         |
+| `ANSIBLE0014`               | 3.4                    | Environment variables don't work as part of command                         |
+| `ANSIBLE0015`               | 3.4                    | Using bare variables is deprecated                                          |
+| `ANSIBLE0016`               | 3.4                    | Tasks that run when changed should likely be handlers                       |
+| `ANSIBLE0017`               | 3.4                    | become_user requires become to work as expected                             |
+| `ANSIBLE0018`               | 3.4                    | always_run is deprecated                                                    |
+| `ANSIBLE0019`               | 3.4                    | No Jinja2 in when                                                           |
+| `E101`                      | 3.5 and 4.*            | Deprecated always_run                                                       |
+| `E102`                      | 3.5 and 4.*            | No Jinja2 in when                                                           |
+| `E103`                      | 3.5 and 4.*            | Deprecated sudo                                                             |
+| `E104`                      | 3.5 and 4.*            | Using bare variables is deprecated                                          |
+| `E105`                      | 3.5 and 4.*            | Deprecated module                                                           |
+| `E106`                      | 3.5 and 4.*            | Role name does not match `^[a-z][a-z0-9_]+$` pattern                        |
+| `E201`                      | 3.5 and 4.*            | Trailing whitespace                                                         |
+| `E202`                      | 3.5 and 4.*            | Octal file permissions must contain leading zero                            |
+| `E203`                      | 3.5 and 4.*            | Most files should not contain tabs                                          |
+| `E204`                      | 3.5 and 4.*            | Lines should be no longer than 120 chars                                    |
+| `E205`                      | 3.5 and 4.*            | Use ".yml" or ".yaml" playbook extension                                    |
+| `E206`                      | 3.5 and 4.*            | Variables should have spaces before and after: `{{ var_name }}`             |
+| `E207`                      | 3.5 and 4.*            | Nested jinja pattern                                                        |
+| `E208`                      | 3.5 and 4.*            | File permissions unset or incorrect                                         |
+| `E301`                      | 3.5 and 4.*            | Commands should not change things if nothing needs doing                    |
+| `E302`                      | 3.5 and 4.*            | Using command rather than an argument to e.g. file                          |
+| `E303`                      | 3.5 and 4.*            | Using command rather than module                                            |
+| `E304`                      | 3.5 and 4.*            | Environment variables don't work as part of command                         |
+| `E305`                      | 3.5 and 4.*            | Use shell only when shell functionality is required                         |
+| `E306`                      | 3.5 and 4.*            | Shells that use pipes should set the `pipefail` option                      |
+| `E401`                      | 3.5 and 4.*            | Git checkouts must contain explicit version                                 |
+| `E402`                      | 3.5 and 4.*            | Mercurial checkouts must contain explicit revision                          |
+| `E403`                      | 3.5 and 4.*            | Package installs should not use latest                                      |
+| `E404`                      | 3.5 and 4.*            | Doesn't need a relative path in role                                        |
+| `E405`                      | 3.5 and 4.*            | Remote package tasks should have a retry                                    |
+| `E501`                      | 3.5 and 4.*            | become_user requires become to work as expected                             |
+| `E502`                      | 3.5 and 4.*            | All tasks should be named                                                   |
+| `E503`                      | 3.5 and 4.*            | Tasks that run when changed should likely be handlers                       |
+| `E504`                      | 3.5 and 4.*            | Do not use `local_action`, use `delegate_to: localhost`                     |
+| `E505`                      | 3.5 and 4.*            | referenced files must exist                                                 |
+| `E601`                      | 3.5 and 4.*            | Don't compare to literal True/False                                         |
+| `E602`                      | 3.5 and 4.*            | Don't compare to empty string                                               |
+| `E701`                      | 3.5 and 4.*            | `meta/main.yml` should contain relevant info                                |
+| `E702`                      | 3.5 and 4.*            | Tags must contain lowercase letters and digits only                         |
+| `E703`                      | 3.5 and 4.*            | `meta/main.yml` default values should be changed                            |
+| `E704`                      | 3.5 and 4.*            | `meta/main.yml` video_links should be formatted correctly                   |
+| `E901`                      | 3.5 and 4.*            | Failed to load or parse file                                                |
+| `command-instead-of-module` | 5.*                    | Using command rather than module                                            |
+| `command-instead-of-shell`  | 5.*                    | Use shell only when shell functionality is required                         |
+| `deprecated-bare-vars`      | 5.*                    | Using bare variables is deprecated                                          |
+| `deprecated-command-syntax` | 5.*                    | Using command rather than an argument to e.g. file                          |
+| `deprecated-local-action`   | 5.*                    | Do not use 'local_action', use 'delegate_to: localhost'                     |
+| `deprecated-module`         | 5.*                    | Deprecated module                                                           |
+| `empty-string-compare`      | 5.*                    | Don't compare to empty string                                               |
+| `fqcn-builtins`             | 5.*                    | Use FQCN for builtin actions                                                |
+| `git-latest`                | 5.*                    | Git checkouts must contain explicit version                                 |
+| `hg-latest`                 | 5.*                    | Mercurial checkouts must contain explicit revision                          |
+| `ignore-errors`             | 5.*                    | Use failed_when and specify error conditions instead of using ignore_errors |
+| `inline-env-var`            | 5.*                    | Command module does not accept setting environment variables inline         |
+| `literal-compare`           | 5.*                    | Don't compare to literal True/False                                         |
+| `meta-incorrect`            | 5.*                    | `meta/main.yml` default values should be changed                            |
+| `meta-no-info`              | 5.*                    | `meta/main.yml` should contain relevant info                                |
+| `meta-no-tags`              | 5.*                    | Tags must contain lowercase letters and digits only                         |
+| `meta-video-links`          | 5.*                    | `meta/main.yml` video_links should be formatted correctly                   |
+| `no-changed-when`           | 5.*                    | Commands should not change things if nothing needs doing                    |
+| `no-handler`                | 5.*                    | Tasks that run when changed should likely be handlers                       |
+| `no-jinja-nesting`          | 5.*                    | Nested jinja pattern                                                        |
+| `no-jinja-when`             | 5.*                    | No Jinja2 in when                                                           |
+| `no-log-password`           | 5.*                    | password should not be logged.                                              |
+| `no-loop-var-prefix`        | 5.*                    | Role loop_var should use configured prefix.                                 |
+| `no-relative-paths`         | 5.*                    | Doesn't need a relative path in role                                        |
+| `no-same-owner`             | 5.*                    | Owner should not be kept between different hosts                            |
+| `no-tabs`                   | 5.*                    | Most files should not contain tabs                                          |
+| `package-latest`            | 5.*                    | Package installs should not use latest                                      |
+| `partial-become`            | 5.*                    | become_user requires become to work as expected                             |
+| `playbook-extension`        | 5.*                    | Use ".yml" or ".yaml" playbook extension                                    |
+| `risky-file-permissions`    | 5.*                    | File permissions unset or incorrect                                         |
+| `risky-octal`               | 5.*                    | Octal file permissions must contain leading zero or be a string             |
+| `risky-shell-pipe`          | 5.*                    | Shells that use pipes should set the pipefail option                        |
+| `role-name`                 | 5.*                    | Role name {0} does not match `^[a-z][a-z0-9_]+$` pattern                    |
+| `syntax-check`              | 5.*                    | Ansible syntax check failed                                                 |
+| `unnamed-task`              | 5.*                    | All tasks should be named                                                   |
+| `var-naming`                | 5.*                    | All variables should be named using only lowercase and underscores          |
+| `var-spacing`               | 5.*                    | Variables should have spaces before and after: `{{ var_name }}`             |
+| `yaml`                      | 5.*                    | Violations reported by yamllint                                             |
+
+
+Tags have been added to help identify the rules depending on the `ansible-lint` version installed on your system.
 
 The `Exxx` rules are only available as of version 2.0.0 of this plugin and with `ansible-lint` version 3.5+.
 See [the Ansible documentation](https://docs.ansible.com/ansible-lint/rules/default_rules.html).

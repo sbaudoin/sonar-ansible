@@ -1,0 +1,16 @@
+{
+  "title": "Use shell only when shell functionality is required",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "5min"
+  },
+  "tags": [
+    "ansible",
+    "ansiblelint-5",
+    "command-shell",
+    "idiom"
+  ],
+  "defaultSeverity": "Critical"
+}

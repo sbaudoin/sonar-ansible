@@ -1,0 +1,15 @@
+{
+  "title": "Owner should not be kept between different hosts",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "5min"
+  },
+  "tags": [
+    "ansible",
+    "ansiblelint-5",
+    "opt-in"
+  ],
+  "defaultSeverity": "Minor"
+}

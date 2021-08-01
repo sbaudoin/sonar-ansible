@@ -1,0 +1,16 @@
+{
+  "title": "Commands should not change things if nothing needs doing",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "5min"
+  },
+  "tags": [
+    "ansible",
+    "ansiblelint-5",
+    "command-shell",
+    "idempotency"
+  ],
+  "defaultSeverity": "Critical"
+}

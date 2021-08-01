@@ -1,0 +1,15 @@
+{
+  "title": "become_user requires become to work as expected",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "5min"
+  },
+  "tags": [
+    "ansible",
+    "ansiblelint-5",
+    "unpredictability"
+  ],
+  "defaultSeverity": "Blocker"
+}

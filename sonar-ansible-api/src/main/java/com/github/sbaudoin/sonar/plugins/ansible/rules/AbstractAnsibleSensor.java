@@ -247,16 +247,20 @@ public abstract class AbstractAnsibleSensor implements Sensor {
      */
     protected boolean registerIssue(String rawIssue) {
         Matcher oldSplitter = Pattern.compile("^(.*):([0-9]+): \\[E(.+)\\] (.+)$").matcher(rawIssue);
-        Matcher newSplitter = Pattern.compile("^([^ ]+) (.+):([0-9]+)$").matcher(rawIssue);
+        Matcher new43Splitter = Pattern.compile("^([^ ]+) (.+):([0-9]+)$").matcher(rawIssue);
+        Matcher new50Splitter = Pattern.compile("^(.*):([0-9]+): ([^ ]+)$").matcher(rawIssue);
 
         String filePath;
         AnsibleLintIssue issue;
         if (oldSplitter.matches()) {
             filePath = oldSplitter.group(1);
             issue = new AnsibleLintIssue(Integer.parseInt(oldSplitter.group(2)), oldSplitter.group(3), oldSplitter.group(4));
-        } else if (newSplitter.matches()) {
-            filePath = newSplitter.group(2);
-            issue = new AnsibleLintIssue(Integer.parseInt(newSplitter.group(3)), newSplitter.group(1));
+        } else if (new43Splitter.matches()) {
+            filePath = new43Splitter.group(2);
+            issue = new AnsibleLintIssue(Integer.parseInt(new43Splitter.group(3)), new43Splitter.group(1));
+        } else if (new50Splitter.matches()) {
+            filePath = new50Splitter.group(1);
+            issue = new AnsibleLintIssue(Integer.parseInt(new50Splitter.group(2)), new50Splitter.group(3));
         } else {
             LOGGER.warn("Invalid issue syntax, ignoring: " + rawIssue);
             return false;

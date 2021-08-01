@@ -1,0 +1,9 @@
+<p>Running <code>ansible-playbook --syntax-check ...</code> failed.</p>
+
+<p>This error <strong>cannot be disabled</strong> due to being a prerequisite for other steps.
+    You can either exclude these files from linting or better assure they can be
+    loaded by Ansible. This is often achieved by editing inventory file and/or
+    <code>ansible.cfg</code> so ansible can load required variables.</p>
+
+<p>If undefined variables are the failure reason you could use jinja <code>default()</code>
+    filter in order to provide fallback values.</p>
