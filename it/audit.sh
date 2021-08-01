@@ -81,9 +81,11 @@ if 'component' not in data or 'measures' not in data['component']:
     print('Invalid server response: wrong JSON', file=sys.stderr)
     sys.exit(1)
 
+print('Measures: {}'.format(str(data['component']['measures'])))
+
 lines = ncloc = files = directories = comment_lines = violations = False
 for measure in data['component']['measures']:
-    if measure['metric'] == 'lines' and measure['value'] == '133':
+    if measure['metric'] == 'lines' and measure['value'] == '134':
         print('lines metrics OK')
         lines = True
 #    if measure['metric'] == 'ncloc' and measure['value'] == '87':
@@ -97,7 +99,7 @@ for measure in data['component']['measures']:
 #        print('comment_lines metrics OK')
 #        comment_lines = True
     comment_lines = True
-    if measure['metric'] == 'violations' and measure['value'] == '31':
+    if measure['metric'] == 'violations' and measure['value'] == '28':
         print('violations metrics OK')
         violations = True
 

@@ -9,8 +9,8 @@
   - name: unset variable
     action: command echo {{thisvariable}} is not set in this playbook
 
-  - name: trailing whitespace
-    action: command echo do nothing   
+  - name: no more trailing whitespace
+    action: command echo do nothing
 
   - name: git check
     action: git a=b c=d
@@ -46,4 +46,4 @@
 
   - name: always run
     debug: msg="sudo is deprecated"
-    sudo: root
+#    sudo: root

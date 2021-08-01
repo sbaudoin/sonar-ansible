@@ -1,3 +1,4 @@
 # No document start mark
-- tasks:
+- hosts: all
+  tasks:
   - git: repo=hello

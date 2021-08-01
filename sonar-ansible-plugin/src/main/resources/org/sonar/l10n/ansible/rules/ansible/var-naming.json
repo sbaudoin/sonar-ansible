@@ -1,0 +1,16 @@
+{
+  "title": "All variables should be named using only lowercase and underscores",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "5min"
+  },
+  "tags": [
+    "ansible",
+    "ansiblelint-5",
+    "idiom",
+    "experimental"
+  ],
+  "defaultSeverity": "Major"
+}

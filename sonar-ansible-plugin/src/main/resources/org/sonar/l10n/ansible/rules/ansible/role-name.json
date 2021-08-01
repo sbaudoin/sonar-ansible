@@ -1,0 +1,16 @@
+{
+  "title": "Role name {0} does not match ``^[a-z][a-z0-9_]+$`` pattern",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "5min"
+  },
+  "tags": [
+    "ansible",
+    "ansiblelint-5",
+    "deprecations",
+    "metadata"
+  ],
+  "defaultSeverity": "Critical"
+}
