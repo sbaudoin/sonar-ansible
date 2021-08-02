@@ -115,8 +115,7 @@ public abstract class AbstractAnsibleSensor implements Sensor {
             scannedFiles.add(inputFile);
 
             // Build ansible-lint command
-            List<String> command = new ArrayList<>();
-            command.addAll(Arrays.asList(getAnsibleLintPath(context), "-p", "--nocolor", "-q"));
+            List<String> command = new ArrayList<>(Arrays.asList(getAnsibleLintPath(context), "-p", "--nocolor", "-q"));
             String confPath = getAnsibleLintConfPath(context);
             if (!"".equals(confPath.trim())) {
                 command.addAll(Arrays.asList("-c", confPath));
@@ -172,13 +171,11 @@ public abstract class AbstractAnsibleSensor implements Sensor {
      * @see AnsibleSettings#ANSIBLE_LINT_PATH_KEY
      */
     protected String getAnsibleLintPath(SensorContext context) {
-        Optional<String> path = context.config().get(AnsibleSettings.ANSIBLE_LINT_PATH_KEY);
-        return (path.isPresent())?path.get():"ansible-lint";
+        return context.config().get(AnsibleSettings.ANSIBLE_LINT_PATH_KEY).orElse("ansible-lint");
     }
 
     protected String getAnsibleLintConfPath(SensorContext context) {
-        Optional<String> path = context.config().get(AnsibleSettings.ANSIBLE_LINT_CONF_PATH_KEY);
-        return (path.isPresent())?path.get():"";
+        return context.config().get(AnsibleSettings.ANSIBLE_LINT_CONF_PATH_KEY).orElse("");
     }
 
     /**
@@ -398,8 +395,8 @@ public abstract class AbstractAnsibleSensor implements Sensor {
     /**
      * Reader class for {@code ansible-lint} output
      */
-    private class LineInputReader extends Thread {
-        private List<String> output = new ArrayList<>();
+    private final class LineInputReader extends Thread {
+        private final List<String> output = new ArrayList<>();
         private BufferedReader input;
         private boolean ready = false;
 
