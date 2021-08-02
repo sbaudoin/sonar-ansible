@@ -136,7 +136,7 @@ public final class AnsibleExtraSensor extends AbstractAnsibleSensor {
         try (OutputStream resStreamOut = new FileOutputStream(directory.resolve(ruleFile.getFileName().toString()).toString())) {
             resStreamOut.write(Files.readAllBytes(ruleFile));
         } catch (IOException e) {
-            LOGGER.error("Cannot extract rule " + ruleFile.toString() + " to " + directory.toString(), e);
+            LOGGER.error("Cannot extract rule " + ruleFile + " to " + directory, e);
             return false;
         }
 

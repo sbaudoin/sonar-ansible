@@ -28,6 +28,6 @@ public class AbstractAnsibleExtrasPluginTest extends TestCase {
         assertEquals(2, context.getExtensions().size());
     }
 
-    private class MyExtrasPlugin extends AbstractAnsibleExtrasPlugin {
+    private static class MyExtrasPlugin extends AbstractAnsibleExtrasPlugin {
     }
 }

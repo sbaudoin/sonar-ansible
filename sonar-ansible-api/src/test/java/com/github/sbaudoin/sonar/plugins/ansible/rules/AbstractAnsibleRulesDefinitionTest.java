@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
 
 public class AbstractAnsibleRulesDefinitionTest {
     @Rule
-    public LogTester logTester = new LogTester();
+    public final LogTester logTester = new LogTester();
 
     @Test
     public void testDefineWithExistingRules() {
@@ -84,7 +84,7 @@ public class AbstractAnsibleRulesDefinitionTest {
     }
 
 
-    private class MyRulesDefinition extends AbstractAnsibleRulesDefinition {
+    private static class MyRulesDefinition extends AbstractAnsibleRulesDefinition {
         String path;
 
         public MyRulesDefinition(String path) {

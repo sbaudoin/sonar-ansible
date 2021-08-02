@@ -37,7 +37,7 @@ import static org.junit.Assert.assertNotEquals;
 
 public class FileSystemTest {
     @Rule
-    public LogTester logTester = new LogTester();
+    public final LogTester logTester = new LogTester();
 
     @Test
     public void testConstructor() throws NoSuchFieldException, IllegalAccessException, URISyntaxException, IOException {

@@ -39,10 +39,10 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 public class AbstractAnsibleSensorNoRuleTest {
     @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @Rule
-    public LogTester logTester = new LogTester();
+    public final LogTester logTester = new LogTester();
 
 
     @Test
@@ -70,7 +70,7 @@ public class AbstractAnsibleSensorNoRuleTest {
     }
 
 
-    private class MySensor extends AbstractAnsibleSensor {
+    private static class MySensor extends AbstractAnsibleSensor {
         protected MySensor(FileSystem fileSystem) {
             super(fileSystem);
         }

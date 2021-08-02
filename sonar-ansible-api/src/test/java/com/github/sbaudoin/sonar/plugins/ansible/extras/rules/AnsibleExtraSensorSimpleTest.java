@@ -61,7 +61,7 @@ public class AnsibleExtraSensorSimpleTest {
     private SensorContextTester context;
 
     @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
 
     @Test
@@ -121,7 +121,7 @@ public class AnsibleExtraSensorSimpleTest {
     }
 
     @Test
-    public void testExtractExtraRulesExtraRules() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException {
+    public void testExtractExtraRulesExtraRules() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         // Make the method public for test purpose
         Method method = AnsibleExtraSensor.class.getDeclaredMethod("extractExtraRules", String.class);
         method.setAccessible(true);
@@ -157,7 +157,7 @@ public class AnsibleExtraSensorSimpleTest {
     }
 
 
-    private class DummySensorDescriptor implements SensorDescriptor {
+    private static class DummySensorDescriptor implements SensorDescriptor {
         private String sensorName;
         private String languageKey;
 

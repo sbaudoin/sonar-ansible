@@ -67,7 +67,7 @@ public class AnsibleSensorTest {
 
 
     @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
 
     @Test
@@ -165,7 +165,7 @@ public class AnsibleSensorTest {
     }
 
 
-    private class DummySensorDescriptor implements SensorDescriptor {
+    private static class DummySensorDescriptor implements SensorDescriptor {
         private String sensorName;
         private String languageKey;
 

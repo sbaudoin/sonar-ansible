@@ -61,10 +61,10 @@ public class AbstractAnsibleSensorTest {
 
 
     @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @Rule
-    public LogTester logTester = new LogTester();
+    public final LogTester logTester = new LogTester();
 
 
     @Test
@@ -116,7 +116,7 @@ public class AbstractAnsibleSensorTest {
 
         // First test: warnings enabled
         assertEquals(3, logTester.logs(LoggerLevel.WARN).size());
-        logTester.logs(LoggerLevel.WARN).stream().forEach(log -> assertTrue(log.startsWith("Messages printed to error output during analysis:") && log.contains("WARNING ")));
+        logTester.logs(LoggerLevel.WARN).forEach(log -> assertTrue(log.startsWith("Messages printed to error output during analysis:") && log.contains("WARNING ")));
 
         // Second test: warnings disabled
         logTester.clear();
@@ -125,7 +125,7 @@ public class AbstractAnsibleSensorTest {
         assertEquals(1, logTester.logs(LoggerLevel.INFO).size());
         assertTrue(logTester.logs(LoggerLevel.INFO).get(0).startsWith("You asked not to see the ansible-lint warnings"));
         assertEquals(3, logTester.logs(LoggerLevel.WARN).size());
-        logTester.logs(LoggerLevel.WARN).stream().forEach(log -> assertTrue(log.startsWith("Messages printed to error output during analysis:") && !log.contains("WARNING ")));
+        logTester.logs(LoggerLevel.WARN).forEach(log -> assertTrue(log.startsWith("Messages printed to error output during analysis:") && !log.contains("WARNING ")));
     }
 
     @Test
@@ -380,7 +380,7 @@ public class AbstractAnsibleSensorTest {
     }
 
     @Test
-    public void testGetRuleKey() throws Exception {
+    public void testGetRuleKey() {
         assertNull(sensor.getRuleKey(context, "foo"));
         assertEquals(RuleKey.of(AnsibleCheckRepository.REPOSITORY_KEY, RULE_ID2), sensor.getRuleKey(context, RULE_ID2));
     }
@@ -411,7 +411,7 @@ public class AbstractAnsibleSensorTest {
     }
 
 
-    private class MySensor extends AbstractAnsibleSensor {
+    private static class MySensor extends AbstractAnsibleSensor {
         protected MySensor(FileSystem fileSystem) {
             super(fileSystem);
         }
