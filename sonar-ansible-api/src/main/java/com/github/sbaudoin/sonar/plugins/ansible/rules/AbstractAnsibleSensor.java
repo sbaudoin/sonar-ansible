@@ -148,7 +148,7 @@ public abstract class AbstractAnsibleSensor implements Sensor {
             }
             // We ignore errors if they are only empty strings
             if (!error.isEmpty() && !"".equals(error.stream().reduce((str1, str2) -> str1.trim() + str2.trim()).orElse(""))) {
-                LOGGER.warn("Errors happened during analysis:{}{}",
+                LOGGER.warn("Messages printed to error output during analysis:{}{}",
                         System.getProperty("line.separator"),
                         String.join(System.getProperty("line.separator"), error)
                 );

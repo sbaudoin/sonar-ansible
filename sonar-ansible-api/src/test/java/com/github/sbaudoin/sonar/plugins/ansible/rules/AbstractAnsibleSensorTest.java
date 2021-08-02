@@ -116,7 +116,7 @@ public class AbstractAnsibleSensorTest {
 
         // First test: warnings enabled
         assertEquals(3, logTester.logs(LoggerLevel.WARN).size());
-        logTester.logs(LoggerLevel.WARN).stream().forEach(log -> assertTrue(log.startsWith("Errors happened during analysis:") && log.contains("WARNING ")));
+        logTester.logs(LoggerLevel.WARN).stream().forEach(log -> assertTrue(log.startsWith("Messages printed to error output during analysis:") && log.contains("WARNING ")));
 
         // Second test: warnings disabled
         logTester.clear();
@@ -125,7 +125,7 @@ public class AbstractAnsibleSensorTest {
         assertEquals(1, logTester.logs(LoggerLevel.INFO).size());
         assertTrue(logTester.logs(LoggerLevel.INFO).get(0).startsWith("You asked not to see the ansible-lint warnings"));
         assertEquals(3, logTester.logs(LoggerLevel.WARN).size());
-        logTester.logs(LoggerLevel.WARN).stream().forEach(log -> assertTrue(log.startsWith("Errors happened during analysis:") && !log.contains("WARNING ")));
+        logTester.logs(LoggerLevel.WARN).stream().forEach(log -> assertTrue(log.startsWith("Messages printed to error output during analysis:") && !log.contains("WARNING ")));
     }
 
     @Test
