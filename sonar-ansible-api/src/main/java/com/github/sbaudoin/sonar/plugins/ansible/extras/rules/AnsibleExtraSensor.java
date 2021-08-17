@@ -90,8 +90,9 @@ public final class AnsibleExtraSensor extends AbstractAnsibleSensor {
         Path tempDir;
         try {
             LOGGER.debug("Creating temp dir {}", EXTRA_RULES_TEMP_DIR);
-            tempDir = Files.createTempDirectory(EXTRA_RULES_TEMP_DIR);
-            LOGGER.debug("Temp dir create: {}", tempDir.toString());
+            tempDir = Files.createTempDirectory(Paths.get(System.getProperty("user.dir")), EXTRA_RULES_TEMP_DIR);
+            tempDir.toFile().deleteOnExit();
+            LOGGER.debug("Temp dir created: {}", tempDir.toString());
         } catch (IOException e) {
             // Not a blocker issue: we won't execute the extra rules
             LOGGER.error("Cannot create temporary directory " + EXTRA_RULES_TEMP_DIR, e);
@@ -133,12 +134,14 @@ public final class AnsibleExtraSensor extends AbstractAnsibleSensor {
     private boolean copyExtraRule(Path ruleFile, Path directory) {
         LOGGER.debug("Copying rule script {} to {}", ruleFile.toString(), directory.toString());
 
-        try (OutputStream resStreamOut = new FileOutputStream(directory.resolve(ruleFile.getFileName().toString()).toString())) {
+        Path copyFile = directory.resolve(ruleFile.getFileName().toString());
+        try (OutputStream resStreamOut = new FileOutputStream(copyFile.toString())) {
             resStreamOut.write(Files.readAllBytes(ruleFile));
         } catch (IOException e) {
             LOGGER.error("Cannot extract rule " + ruleFile + " to " + directory, e);
             return false;
         }
+        copyFile.toFile().deleteOnExit();
 
         return true;
     }

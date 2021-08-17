@@ -71,7 +71,7 @@ public class AnsibleExtraSensorAdvancedTest {
 
         // Prevent the temporary directory from being created
         mockStatic(Files.class);
-        when(Files.createTempDirectory(any(String.class))).thenThrow(new IOException("forbidden"));
+        when(Files.createTempDirectory(any(Path.class), any(String.class))).thenThrow(new IOException("forbidden"));
         assertNull(method.invoke(sensor, AnsibleExtraSensor.EXTRA_RULES_DIR));
     }
 
