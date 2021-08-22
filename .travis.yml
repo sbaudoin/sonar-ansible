@@ -24,7 +24,8 @@ script:
   - mvn clean package sonar:sonar -P audit,build || travis_terminate 1
   - bash it/it.sh 6.7-community 3.4.0.1729 "" 4.1.0 2.8.16 || travis_terminate 1
   - bash it/it.sh 7.9-community 3.4.0.1729 11 4.3.7 2.8.16 || travis_terminate 1
-  - bash it/it.sh 8.9-community 4.5.0.2216 11 5.0.11 2.9.0
+  - bash it/it.sh 8.9-community 4.5.0.2216 11 5.0.11 2.9.0 || travis_terminate 1
+  - bash it/it.sh 9.0-community 4.5.0.2216 11 5.0.11 2.9.0
 deploy:
   - provider: script
     script: bash .travis/deploy.sh
