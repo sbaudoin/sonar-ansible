@@ -7,6 +7,8 @@ services:
       - "9000:9000"
     environment:
       ES_JAVA_OPTS: "-Xms750m -Xmx750m"
+    security_opt:
+      - seccomp:unconfined
   auditor:
     image: auditor:${SCANNER_VERSION}-jdk${JAVA_VERSION:-8}
     build:
