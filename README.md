@@ -212,6 +212,6 @@ Be aware that this may also apply to custom rules packaged into the extras plugi
 
 ## License
 
-Copyright 2018-2019 Sylvain BAUDOIN
+Copyright 2018-2021 Sylvain BAUDOIN
 
 Licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
