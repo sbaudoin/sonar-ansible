@@ -68,6 +68,27 @@ public class AbstractAnsibleSensorTest {
 
 
     @Test
+    public void testExecuteWithAnsibleLintVersions() throws IOException {
+        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY,
+                    new File(getClass().getResource("/scripts/ansible-lint-version.cmd").getFile()).getAbsolutePath());
+        } else {
+            String path = new File(getClass().getResource("/scripts/ansible-lint-version.sh").getFile()).getAbsolutePath();
+            context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_PATH_KEY, path);
+            setShellRights(path);
+        }
+
+        logTester.clear();
+        sensor.executeWithAnsibleLint(context, null);
+        assertEquals(1, logTester.logs(LoggerLevel.WARN).size());
+        assertEquals("Cannot get ansible version", logTester.logs(LoggerLevel.WARN).get(0));
+        List<String> l = logTester.logs(LoggerLevel.INFO);
+        assertEquals(2, logTester.logs(LoggerLevel.INFO).size());
+        assertEquals("ansible-lint version:", logTester.logs(LoggerLevel.INFO).get(0));
+        assertEquals("ansible-lint 1.2.3", logTester.logs(LoggerLevel.INFO).get(1));
+    }
+
+    @Test
     public void testExecuteWithAnsibleLintEmptyOutput() throws IOException {
         InputFile playbook1 = Utils.getInputFile("playbooks/playbook1.yml");
         InputFile playbook2 = Utils.getInputFile("playbooks/playbook2.yml");
@@ -115,17 +136,17 @@ public class AbstractAnsibleSensorTest {
         assertEquals(0, context.allIssues().size());
 
         // First test: warnings enabled
-        assertEquals(3, logTester.logs(LoggerLevel.WARN).size());
-        logTester.logs(LoggerLevel.WARN).forEach(log -> assertTrue(log.startsWith("Messages printed to error output during analysis:") && log.contains("WARNING ")));
+        assertEquals(4, logTester.logs(LoggerLevel.WARN).size());
+        logTester.logs(LoggerLevel.WARN).subList(1, 4).forEach(log -> assertTrue(log.startsWith("Messages printed to error output during analysis:") && log.contains("WARNING ")));
 
         // Second test: warnings disabled
         logTester.clear();
         context.settings().appendProperty(AnsibleSettings.ANSIBLE_LINT_DISABLE_WARNINGS_KEY, "true");
         sensor.executeWithAnsibleLint(context, null);
-        assertEquals(1, logTester.logs(LoggerLevel.INFO).size());
-        assertTrue(logTester.logs(LoggerLevel.INFO).get(0).startsWith("You asked not to see the ansible-lint warnings"));
-        assertEquals(3, logTester.logs(LoggerLevel.WARN).size());
-        logTester.logs(LoggerLevel.WARN).forEach(log -> assertTrue(log.startsWith("Messages printed to error output during analysis:") && !log.contains("WARNING ")));
+        assertEquals(2, logTester.logs(LoggerLevel.INFO).size());
+        assertTrue(logTester.logs(LoggerLevel.INFO).get(1).startsWith("You asked not to see the ansible-lint warnings"));
+        assertEquals(4, logTester.logs(LoggerLevel.WARN).size());
+        logTester.logs(LoggerLevel.WARN).subList(1, 4).forEach(log -> assertTrue(log.startsWith("Messages printed to error output during analysis:") && !log.contains("WARNING ")));
     }
 
     @Test
