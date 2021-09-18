@@ -110,6 +110,9 @@ public abstract class AbstractAnsibleSensor implements Sensor {
             return;
         }
 
+        // Log versions
+        logVersions(context);
+
         for (InputFile inputFile : fileSystem.inputFiles(mainFilesPredicate)) {
             LOGGER.debug("Analyzing file: " + inputFile.filename());
             scannedFiles.add(inputFile);
@@ -388,6 +391,39 @@ public abstract class AbstractAnsibleSensor implements Sensor {
         @Override
         public int hashCode() {
             return Objects.hash(line, id);
+        }
+    }
+
+
+    /**
+     * Log the versions of ansible and ansible-lint
+     *
+     * @param context the execution sensor context (taken from the method {@link #execute(SensorContext)} of the child class)
+     */
+    private void logVersions(SensorContext context) {
+        // Ansible first
+        logVersion("ansible", new ArrayList<>(Arrays.asList("ansible", "--version")));
+
+        // Then ansible-lint
+        logVersion("ansible-lint", new ArrayList<>(Arrays.asList(getAnsibleLintPath(context), "--version")));
+    }
+
+    /**
+     * Log the output of a command that is supposed to return the verion of a command
+     *
+     * @param name the name of the command
+     * @param command the command to be executed
+     */
+    private void logVersion(String name, List<String> command) {
+        List<String> output = new ArrayList<>();
+        List<String> error = new ArrayList<>();
+
+        try {
+            executeCommand(command, output, error);
+            LOGGER.info(name + " version:");
+            output.forEach(LOGGER::info);
+        } catch (Exception e) {
+            LOGGER.warn("Cannot get " + name + " version");
         }
     }
 
