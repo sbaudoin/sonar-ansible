@@ -409,7 +409,7 @@ public abstract class AbstractAnsibleSensor implements Sensor {
     }
 
     /**
-     * Log the output of a command that is supposed to return the verion of a command
+     * Log the output of a command that is supposed to return the version of a command
      *
      * @param name the name of the command
      * @param command the command to be executed
@@ -422,8 +422,11 @@ public abstract class AbstractAnsibleSensor implements Sensor {
             executeCommand(command, output, error);
             LOGGER.info(name + " version:");
             output.forEach(LOGGER::info);
-        } catch (Exception e) {
+        } catch (IOException e) {
             LOGGER.warn("Cannot get " + name + " version");
+        } catch (InterruptedException e) {
+            LOGGER.warn("Cannot get " + name + " version");
+            Thread.currentThread().interrupt();
         }
     }
 
