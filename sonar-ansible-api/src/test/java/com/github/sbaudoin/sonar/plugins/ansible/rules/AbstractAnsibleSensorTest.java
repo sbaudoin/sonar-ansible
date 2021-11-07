@@ -198,6 +198,23 @@ public class AbstractAnsibleSensorTest {
     }
 
     @Test
+    public void testExecuteWithAnsibleLintInterruptedException() throws IOException, InterruptedException {
+        InputFile playbook1 = Utils.getInputFile("playbooks/playbook1.yml");
+        InputFile playbook2 = Utils.getInputFile("playbooks/playbook2.yml");
+        InputFile playbook3 = Utils.getInputFile("playbooks/playbook3.yml");
+        context.fileSystem().add(playbook1).add(playbook2).add(playbook3);
+
+        MySensor theSensor = spy(sensor);
+        doThrow(new InterruptedException("Boom!")).when(theSensor).executeCommand(any(), any(), any());
+
+        theSensor.executeWithAnsibleLint(context, Arrays.asList("foo", "bar"));
+        assertEquals(1, theSensor.scannedFiles.size());
+
+        Collection<Issue> issues = context.allIssues();
+        assertEquals(0, issues.size());
+    }
+
+    @Test
     public void testExecuteWithAnsibleLintWinthoutConf() throws IOException {
         InputFile playbook1 = Utils.getInputFile("playbooks/playbook1.yml");
         context.fileSystem().add(playbook1);
