@@ -8,7 +8,7 @@
     <!-- Follow the SonarQube standard if possible: sonar-xxx-plugin -->
     <artifactId>sonar-ansible-extras-plugin</artifactId>
     <!-- Also give a version to your plugin. Good practices make the version to be incremented every time you change the content of the plugin. -->
-    <version>2.5.0</version>
+    <version>2.5.1-SNAPSHOT</version>
     <packaging>sonar-plugin</packaging>
 
     <!-- Give a suitable name and description to your rules/plugin -->
