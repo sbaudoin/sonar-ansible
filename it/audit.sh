@@ -21,7 +21,7 @@ if [ "$(python3 --version)" == "Python 3.5.3" ]
 then
     patch /usr/lib/python3.5/weakref.py < /usr/src/myapp/it/py35.patch
 fi
-pip3 install -q ansible-lint$LINTER_VERSION $PIP_ANSIBLE requests requests[security]
+pip3 install -q "rich<=10.16.2" ansible-lint$LINTER_VERSION $PIP_ANSIBLE requests requests[security]
 
 # Create quality profile to enable Ansible rules
 echo "Enabling Ansible rules..."
