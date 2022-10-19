@@ -15,7 +15,9 @@
  */
 package com.github.sbaudoin.sonar.plugins.ansible.rules;
 
+import com.github.sbaudoin.sonar.plugins.ansible.checks.AnsibleCheckRepository;
 import com.github.sbaudoin.sonar.plugins.ansible.settings.AnsibleSettings;
+import com.github.sbaudoin.sonar.plugins.yaml.languages.YamlLanguage;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
@@ -26,8 +28,6 @@ import org.sonar.api.batch.sensor.issue.NewIssueLocation;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
-import com.github.sbaudoin.sonar.plugins.ansible.checks.AnsibleCheckRepository;
-import com.github.sbaudoin.sonar.plugins.yaml.languages.YamlLanguage;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -50,35 +50,28 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractAnsibleSensor implements Sensor {
     private static final Logger LOGGER = Loggers.get(AbstractAnsibleSensor.class);
-
-
-    /**
-     * Flag used to make sure we notify about warnings disabled only once
-     */
-    private boolean infoWarningsShown = false;
-
-
     /**
      * The underlying file system that will give access to the files to be analyzed
      */
     protected final FileSystem fileSystem;
-
     /**
      * File predicate to filter and select the files to be analyzed with this sensor
      */
     protected final FilePredicate mainFilesPredicate;
-
     /**
      * All issues found on the analyzed code. This key is the URI to the files where the issues were found and the
      * value is the issue message returned by {@code ansible-lint}
      */
     protected final Map<URI, Set<AnsibleLintIssue>> allIssues = new HashMap<>();
-
     /**
      * The list of files analyzed by this sensor. As {@code ansible-lint} will not aggregate the issues per file,
      * the result of {@link InputFile#uri()} will be used as the key for {@link #allIssues}.
      */
     protected final Set<InputFile> scannedFiles = new HashSet<>();
+    /**
+     * Flag used to make sure we notify about warnings disabled only once
+     */
+    private boolean infoWarningsShown = false;
 
 
     /**
@@ -249,6 +242,7 @@ public abstract class AbstractAnsibleSensor implements Sensor {
         Matcher oldSplitter = Pattern.compile("^(.*):([0-9]+): \\[E([^\\[]+)\\] (.*)$").matcher(rawIssue);
         Matcher new43Splitter = Pattern.compile("^([^ ]+) (.+):([0-9]+)$").matcher(rawIssue);
         Matcher new50Splitter = Pattern.compile("^(.*):([0-9]+): ([^ ]+)$").matcher(rawIssue);
+        Matcher new65Splitter = Pattern.compile("^(.*):([0-9]+): ([^ ]+) \\((.*)\\)$").matcher(rawIssue);
 
         String filePath;
         AnsibleLintIssue issue;
@@ -261,6 +255,9 @@ public abstract class AbstractAnsibleSensor implements Sensor {
         } else if (new50Splitter.matches()) {
             filePath = new50Splitter.group(1);
             issue = new AnsibleLintIssue(Integer.parseInt(new50Splitter.group(2)), new50Splitter.group(3));
+        } else if (new65Splitter.matches()) {
+            filePath = new65Splitter.group(1);
+            issue = new AnsibleLintIssue(Integer.parseInt(new65Splitter.group(2)), new65Splitter.group(4));
         } else {
             LOGGER.warn("Invalid issue syntax, ignoring: " + rawIssue);
             return false;
@@ -336,9 +333,43 @@ public abstract class AbstractAnsibleSensor implements Sensor {
      */
     protected RuleKey getRuleKey(SensorContext context, String ruleId) {
         RuleKey key = AnsibleCheckRepository.getRuleKey(ruleId);
-        return (context.activeRules().find(key) != null)?key:null;
+        return (context.activeRules().find(key) != null) ? key : null;
     }
 
+    /**
+     * Log the versions of ansible and ansible-lint
+     *
+     * @param context the execution sensor context (taken from the method {@link #execute(SensorContext)} of the child class)
+     */
+    private void logVersions(SensorContext context) {
+        // Ansible first
+        logVersion("ansible", new ArrayList<>(Arrays.asList("ansible", "--version")));
+
+        // Then ansible-lint
+        logVersion("ansible-lint", new ArrayList<>(Arrays.asList(getAnsibleLintPath(context), "--version")));
+    }
+
+    /**
+     * Log the output of a command that is supposed to return the version of a command
+     *
+     * @param name    the name of the command
+     * @param command the command to be executed
+     */
+    private void logVersion(String name, List<String> command) {
+        List<String> output = new ArrayList<>();
+        List<String> error = new ArrayList<>();
+
+        try {
+            executeCommand(command, output, error);
+            LOGGER.info(name + " version:");
+            output.forEach(LOGGER::info);
+        } catch (IOException e) {
+            LOGGER.warn("Cannot get " + name + " version");
+        } catch (InterruptedException e) {
+            LOGGER.warn("Cannot get " + name + " version");
+            Thread.currentThread().interrupt();
+        }
+    }
 
     /**
      * Bean that represents an issue as returned by ansible-lint
@@ -393,43 +424,6 @@ public abstract class AbstractAnsibleSensor implements Sensor {
             return Objects.hash(line, id);
         }
     }
-
-
-    /**
-     * Log the versions of ansible and ansible-lint
-     *
-     * @param context the execution sensor context (taken from the method {@link #execute(SensorContext)} of the child class)
-     */
-    private void logVersions(SensorContext context) {
-        // Ansible first
-        logVersion("ansible", new ArrayList<>(Arrays.asList("ansible", "--version")));
-
-        // Then ansible-lint
-        logVersion("ansible-lint", new ArrayList<>(Arrays.asList(getAnsibleLintPath(context), "--version")));
-    }
-
-    /**
-     * Log the output of a command that is supposed to return the version of a command
-     *
-     * @param name the name of the command
-     * @param command the command to be executed
-     */
-    private void logVersion(String name, List<String> command) {
-        List<String> output = new ArrayList<>();
-        List<String> error = new ArrayList<>();
-
-        try {
-            executeCommand(command, output, error);
-            LOGGER.info(name + " version:");
-            output.forEach(LOGGER::info);
-        } catch (IOException e) {
-            LOGGER.warn("Cannot get " + name + " version");
-        } catch (InterruptedException e) {
-            LOGGER.warn("Cannot get " + name + " version");
-            Thread.currentThread().interrupt();
-        }
-    }
-
 
     /**
      * Reader class for {@code ansible-lint} output

@@ -1,1 +1,1 @@
-@echo "ansible-lint 1.2.3"
+@echo ansible-lint 1.2.3

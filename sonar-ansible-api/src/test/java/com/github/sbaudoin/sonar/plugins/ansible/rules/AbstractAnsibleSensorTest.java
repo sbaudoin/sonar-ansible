@@ -40,7 +40,10 @@ import org.sonar.api.utils.log.LoggerLevel;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.github.sbaudoin.sonar.plugins.ansible.Utils.issueExists;
@@ -53,19 +56,15 @@ public class AbstractAnsibleSensorTest {
     private static final String RULE_ID1 = "ANSIBLE1";
     private static final String RULE_ID2 = "EAnyCheck1";
     private static final String RULE_ID3 = "EAnyCheck2";
+    @Rule
+    public final TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @Rule
+    public final LogTester logTester = new LogTester();
     private final RuleKey ruleKey1 = RuleKey.of(AnsibleCheckRepository.REPOSITORY_KEY, RULE_ID1);
     private final RuleKey ruleKey2 = RuleKey.of(AnsibleCheckRepository.REPOSITORY_KEY, RULE_ID2);
     private final RuleKey ruleKey3 = RuleKey.of(AnsibleCheckRepository.REPOSITORY_KEY, RULE_ID3);
     private MySensor sensor;
     private SensorContextTester context;
-
-
-    @Rule
-    public final TemporaryFolder temporaryFolder = new TemporaryFolder();
-
-    @Rule
-    public final LogTester logTester = new LogTester();
-
 
     @Test
     public void testExecuteWithAnsibleLintVersions() throws IOException {
@@ -349,15 +348,26 @@ public class AbstractAnsibleSensorTest {
         assertTrue(sensor.registerIssue("xxx " + file2.getPath() + ":3"));
         assertTrue(sensor.registerIssue(file2.getPath() + ":3: xxx"));
         assertEquals(2, sensor.allIssues.size());
+        // New syntax ansible-lint 6.5
+        File file3 = new File("path/to/another/file3.yml");
+        File file3Absolute = new File(context.fileSystem().baseDir().getAbsolutePath(), file3.getPath());
+        assertTrue(sensor.registerIssue(file3.getPath() + ":6: yaml (yaml[there is a problem])"));
+        assertEquals(3, sensor.allIssues.size());
         assertEquals(5, sensor.allIssues.get(file1.toURI()).size());
         assertTrue(sensor.allIssues.get(file1.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(2, "xxx", "there is a problem")));
         assertTrue(sensor.allIssues.get(file1.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(3, "xxx")));
         assertTrue(sensor.allIssues.get(file1.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(4, "yyy")));
         assertTrue(sensor.allIssues.get(file1.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(5, "yyy")));
         assertTrue(sensor.allIssues.get(file1.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(5, "xxx")));
+
         assertEquals(2, sensor.allIssues.get(file2Absolute.toURI()).size());
         assertTrue(sensor.allIssues.get(file2Absolute.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(2, "xxx", "there is a problem")));
         assertTrue(sensor.allIssues.get(file2Absolute.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(3, "xxx")));
+
+        assertEquals(1, sensor.allIssues.get(file3Absolute.toURI()).size());
+        assertTrue(sensor.allIssues.get(file3Absolute.toURI()).contains(new AbstractAnsibleSensor.AnsibleLintIssue(6, "yaml[there is a problem]")));
+
+
     }
 
     @Test
