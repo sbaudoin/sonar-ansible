@@ -248,7 +248,7 @@ public abstract class AbstractAnsibleSensor implements Sensor {
     protected boolean registerIssue(String rawIssue) {
         Matcher oldSplitter = Pattern.compile("^(.*):([0-9]+): \\[E([^\\[]+)\\] (.*)$").matcher(rawIssue);
         Matcher new43Splitter = Pattern.compile("^([^ ]+) (.+):([0-9]+)$").matcher(rawIssue);
-        Matcher new50Splitter = Pattern.compile("^(.*):([0-9]+): ([^ ]+)$").matcher(rawIssue);
+        Matcher new50Splitter = Pattern.compile("^(.*):([0-9]+): ([^ ]+)(.*)$").matcher(rawIssue);
 
         String filePath;
         AnsibleLintIssue issue;
